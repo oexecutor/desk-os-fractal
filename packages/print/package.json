@@ -1,0 +1,29 @@
+{
+  "name": "@desk-os/print",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A4-portrait folded weekly PrintSnapshot composer, content budget and HTML renderer (ADR-0017).",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@desk-os/domain": "workspace:*",
+    "@desk-os/schemas": "workspace:*",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/node": "22.20.1",
+    "@types/qrcode": "1.5.6"
+  }
+}

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DESK-OS · Dashboard físico semanal · A4 retrato</title>
+<style>
+:root {
+  --paper: #fffefb;
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --ink: #14140f;
+  --ink-soft: #5c5b52;
+  --ink-faint: #9d9b90;
+  --line: #e3e1d8;
+  --line-strong: #c9c6b9;
+  --accent: #1f4b3f;
+  --accent-soft: #dce8e2;
+  --amber: #b3792c;
+  --amber-soft: #f3e6d2;
+  --clay: #a8492f;
+  --clay-soft: #f2dcd3;
+
+  --sheet-w: 210mm;
+  --sheet-h: 297mm;
+
+  /* Protótipo configurável: 32 + 88 + 32 + 88 + 57 = 297 mm */
+  --zone-top: 32mm;
+  --face-h: 88mm;
+  --zone-middle: 32mm;
+  --zone-bottom: 57mm;
+
+  --safe: 5mm;
+  --gap: 3mm;
+  --radius: 3px;
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Arial, sans-serif;
+  --mono: "SFMono-Regular", "JetBrains Mono", Consolas, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html { background: #d7d5ce; }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--sans);
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255,255,255,.72), transparent 32rem),
+    #d7d5ce;
+  -webkit-font-smoothing: antialiased;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 11px 18px;
+  color: #fff;
+  background: rgba(20,20,15,.94);
+  backdrop-filter: blur(10px);
+}
+.toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toolbar-mark {
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  box-shadow: inset 0 0 0 4px var(--ink);
+  outline: 1px solid rgba(255,255,255,.25);
+}
+.toolbar strong {
+  display: block;
+  font-size: 13px;
+}
+.toolbar span {
+  font: 10px var(--mono);
+  color: rgba(255,255,255,.62);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+.toolbar button {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 3px;
+  padding: 8px 11px;
+  background: rgba(255,255,255,.07);
+  color: #fff;
+  font: 600 11px var(--sans);
+  cursor: pointer;
+}
+.toolbar button:hover { background: rgba(255,255,255,.15); }
+
+.stage {
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.sheet {
+  position: relative;
+  width: var(--sheet-w);
+  height: var(--sheet-h);
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(20,20,15,.10);
+  box-shadow: 0 20px 62px rgba(20,20,15,.20);
+}
+
+.sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .35;
+  background-image:
+    linear-gradient(rgba(20,20,15,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,20,15,.018) 1px, transparent 1px);
+  background-size: 5mm 5mm;
+}
+
+.sheet-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-rows:
+    var(--zone-top)
+    var(--face-h)
+    var(--zone-middle)
+    var(--face-h)
+    var(--zone-bottom);
+}
+
+.mechanical {
+  position: relative;
+  background: linear-gradient(180deg, rgba(20,20,15,.012), rgba(20,20,15,.025));
+}
+.mechanical-label {
+  position: absolute;
+  left: 6mm;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  font: 6.3pt var(--mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.mechanical small {
+  display: block;
+  margin-top: 1mm;
+  color: #aaa89e;
+  font: 5.4pt var(--mono);
+  letter-spacing: .03em;
+  text-transform: none;
+}
+.fold {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.15mm;
+  border-bottom: .3mm dashed rgba(20,20,15,.24);
+  pointer-events: none;
+}
+
+.face-wrap {
+  position: relative;
+  padding: 0 var(--safe);
+  background: var(--paper);
+}
+.face-wrap::before,
+.face-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: .25mm;
+  background: rgba(20,20,15,.08);
+}
+.face-wrap::before { left: var(--safe); }
+.face-wrap::after { right: var(--safe); }
+
+.face {
+  width: 200mm;
+  height: var(--face-h);
+  margin: 0 auto;
+  padding: 4mm;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 2.5mm;
+  border: .3mm solid var(--line-strong);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.face-2 {
+  transform: rotate(180deg);
+  transform-origin: 50% 50%;
+}
+
+.face-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 5mm;
+  padding-bottom: 2mm;
+  border-bottom: .3mm solid var(--line-strong);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 2.6mm;
+}
+.brand-mark {
+  position: relative;
+  width: 6mm;
+  height: 6mm;
+  flex: 0 0 auto;
+  background: var(--ink);
+}
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 1.05mm;
+  border: .28mm solid var(--paper);
+}
+.brand-name {
+  font-size: 11pt;
+  font-weight: 750;
+  letter-spacing: -.025em;
+}
+.brand-tag {
+  margin-top: .4mm;
+  color: var(--ink-faint);
+  font: 5.6pt var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.face-meta {
+  text-align: right;
+  color: var(--ink-faint);
+  font: 5.5pt/1.45 var(--mono);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.face-meta b {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.card {
+  border: .3mm solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,.92);
+  padding: 2.5mm;
+  min-width: 0;
+}
+.card-label {
+  margin-bottom: 1mm;
+  color: var(--ink-faint);
+  font: 5.3pt var(--mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.mono { font-family: var(--mono); }
+
+.face1-grid {
+  display: grid;
+  grid-template-columns: 1.65fr .75fr;
+  gap: var(--gap);
+  min-height: 0;
+}
+.face1-main {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--gap);
+  min-height: 0;
+}
+.face1-side {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--gap);
+  min-height: 0;
+}
+
+.hero {
+  border-left: 1.35mm solid var(--accent);
+}
+.hero-kicker {
+  color: var(--accent);
+  font: 5.6pt var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  margin: .8mm 0 0;
+  font-size: 13.5pt;
+  line-height: 1.07;
+  letter-spacing: -.035em;
+}
+.hero p {
+  margin: 1.2mm 0 0;
+  color: var(--ink-soft);
+  font-size: 6.6pt;
+  line-height: 1.35;
+}
+
+.week-map {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5mm;
+}
+.week-item {
+  min-height: 27mm;
+  padding: 2mm;
+  border: .3mm solid var(--line);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.week-item.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 1mm 0 var(--accent);
+}
+.week-day {
+  color: var(--accent);
+  font: 700 5.2pt var(--mono);
+}
+.week-title {
+  margin-top: 1.6mm;
+  font-size: 6.3pt;
+  line-height: 1.18;
+  font-weight: 700;
+}
+.week-link {
+  margin-top: 1.6mm;
+  color: var(--amber);
+  font: 5.2pt/1.25 var(--mono);
+}
+
+.contract-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5mm;
+}
+.metric {
+  padding: 2mm;
+  background: var(--bg);
+  border: .3mm solid var(--line);
+}
+.metric-label {
+  color: var(--ink-faint);
+  font: 5pt var(--mono);
+  text-transform: uppercase;
+}
+.metric-value {
+  margin-top: .9mm;
+  font: 700 9.8pt var(--mono);
+}
+.metric-sub {
+  margin-top: .5mm;
+  color: var(--ink-soft);
+  font-size: 5.4pt;
+  line-height: 1.25;
+}
+
+.qr-card {
+  display: grid;
+  grid-template-columns: 23mm 1fr;
+  align-items: center;
+  gap: 2.5mm;
+}
+.qr {
+  width: 22mm;
+  height: 22mm;
+  padding: 1.2mm;
+  border: .3mm solid var(--line-strong);
+  background: #fff;
+}
+.qr img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.qr-copy b {
+  display: block;
+  font-size: 6.5pt;
+}
+.qr-copy p {
+  margin: .8mm 0 0;
+  color: var(--ink-soft);
+  font-size: 5.5pt;
+  line-height: 1.32;
+}
+.qr-code {
+  margin-top: 1mm;
+  color: var(--ink-faint);
+  font: 4.7pt var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.alert {
+  border-color: var(--clay);
+  background: var(--clay-soft);
+}
+.alert .card-label { color: var(--clay); }
+.alert p {
+  margin: 0;
+  color: #6f3022;
+  font-size: 5.6pt;
+  line-height: 1.3;
+}
+
+.face-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4mm;
+  padding-top: 1.5mm;
+  border-top: .3mm solid var(--line-strong);
+  color: var(--ink-faint);
+  font: 4.8pt var(--mono);
+}
+.face-footer b { color: var(--ink-soft); }
+
+.execution-grid {
+  display: grid;
+  grid-template-columns: 1fr 30mm;
+  gap: 2.5mm;
+  min-height: 0;
+}
+.day-table {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  border: .3mm solid var(--line-strong);
+  border-bottom: 0;
+  min-height: 0;
+}
+.day-row {
+  display: grid;
+  grid-template-columns: 12mm 34mm 1fr 24mm;
+  min-height: 0;
+  border-bottom: .3mm solid var(--line-strong);
+}
+.day-row > div {
+  min-width: 0;
+  padding: 1.25mm 1.5mm;
+  border-right: .3mm solid var(--line);
+}
+.day-row > div:last-child { border-right: 0; }
+.day-label {
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--bg);
+  font: 700 5.8pt var(--mono);
+}
+.day-result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.day-result b {
+  font-size: 5.9pt;
+  line-height: 1.15;
+}
+.day-result span {
+  margin-top: .5mm;
+  color: var(--ink-faint);
+  font: 4.7pt var(--mono);
+}
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1mm;
+  align-items: stretch;
+}
+.action {
+  display: flex;
+  align-items: center;
+  gap: 1mm;
+  padding: 1mm;
+  border: .25mm solid var(--line);
+  background: var(--surface);
+  font-size: 5.2pt;
+  line-height: 1.14;
+}
+.check {
+  width: 3mm;
+  height: 3mm;
+  flex: 0 0 auto;
+  border: .3mm solid var(--line-strong);
+  background: white;
+}
+.link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--amber-soft);
+}
+.link b {
+  color: var(--amber);
+  font: 700 5.2pt var(--mono);
+}
+.link span {
+  margin-top: .5mm;
+  color: #76531f;
+  font-size: 4.8pt;
+  line-height: 1.15;
+}
+
+.execution-side {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 2mm;
+}
+.recycle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1mm;
+}
+.recycle-option {
+  display: flex;
+  align-items: center;
+  gap: 1mm;
+  padding: 1.2mm;
+  border: .25mm solid var(--line);
+  background: var(--surface);
+  font-size: 5.1pt;
+}
+.note-lines {
+  display: grid;
+  gap: 1.2mm;
+}
+.note-line label {
+  display: block;
+  margin-bottom: .5mm;
+  color: var(--ink-faint);
+  font: 4.8pt var(--mono);
+  text-transform: uppercase;
+}
+.rule {
+  height: 3.2mm;
+  border-bottom: .25mm solid var(--line-strong);
+}
+
+.screen-note {
+  width: 210mm;
+  margin: 14px auto 0;
+  color: #5d5b54;
+  font: 11px/1.5 var(--sans);
+}
+.screen-note code {
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(255,255,255,.7);
+  font-family: var(--mono);
+}
+
+.hide-guides .mechanical-label,
+.hide-guides .fold {
+  visibility: hidden;
+}
+.hide-guides .mechanical {
+  background: var(--paper);
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    background: #fff !important;
+  }
+  .toolbar, .screen-note {
+    display: none !important;
+  }
+  .stage {
+    padding: 0;
+    overflow: visible;
+  }
+  .sheet {
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    page-break-after: avoid;
+  }
+  .mechanical-label {
+    display: none !important;
+  }
+  .fold {
+    border-bottom-color: rgba(20,20,15,.16);
+  }
+}
+</style>
+</head>
+<body>
+<header class="toolbar">
+  <div class="toolbar-title">
+    <div class="toolbar-mark"></div>
+    <div>
+      <strong>DESK-OS · dashboard físico semanal</strong>
+      <span>A4 retrato · duas faces horizontais · conteúdo estático</span>
+    </div>
+  </div>
+  <div class="toolbar-actions">
+    <button type="button" onclick="document.querySelector('.sheet').classList.toggle('hide-guides')">Guias</button>
+    <button type="button" onclick="window.print()">Imprimir / PDF</button>
+  </div>
+</header>
+
+<main class="stage">
+  <article class="sheet" aria-label="Folha A4 retrato com duas faces horizontais">
+    <div class="sheet-grid">
+
+      <section class="mechanical" aria-label="Área estrutural superior">
+        <div class="mechanical-label">área estrutural superior
+          <small>sem conteúdo informacional</small>
+        </div>
+        <div class="fold"></div>
+      </section>
+
+      <section class="face-wrap">
+        <div class="face face-1">
+          <header class="face-header">
+            <div class="brand">
+              <div class="brand-mark"></div>
+              <div>
+                <div class="brand-name">deskloop · fractal</div>
+                <div class="brand-tag">face 01 · visão e contrato semanal</div>
+              </div>
+            </div>
+            <div class="face-meta">
+              JOÃO · P2 · CLEAN SEA<br>
+              <b>SPRINT 2026-W29 · 13–17 JUL</b>
+            </div>
+          </header>
+
+          <div class="face1-grid">
+            <div class="face1-main">
+              <section class="card hero">
+                <div class="hero-kicker">resultado dominante da semana</div>
+                <h1>Desenhar e validar o fluxo digital da operação Clean Sea</h1>
+                <p><b>Pronto quando:</b> o piloto estiver configurado, testado em operação real e com plano de escala registrado.</p>
+              </section>
+
+              <section class="card">
+                <div class="card-label">mapa semanal · 5 blocos · 15 ações · 5 links</div>
+                <div class="week-map">
+                  <div class="week-item active">
+                    <div>
+                      <div class="week-day">SEG · 01</div>
+                      <div class="week-title">Mapear AS-IS</div>
+                    </div>
+                    <div class="week-link">LINK · mapa atual</div>
+                  </div>
+                  <div class="week-item">
+                    <div>
+                      <div class="week-day">TER · 02</div>
+                      <div class="week-title">Diagnosticar dores</div>
+                    </div>
+                    <div class="week-link">LINK · diagnóstico</div>
+                  </div>
+                  <div class="week-item">
+                    <div>
+                      <div class="week-day">QUA · 03</div>
+                      <div class="week-title">Desenhar TO-BE</div>
+                    </div>
+                    <div class="week-link">LINK · fluxo futuro</div>
+                  </div>
+                  <div class="week-item">
+                    <div>
+                      <div class="week-day">QUI · 04</div>
+                      <div class="week-title">Configurar piloto</div>
+                    </div>
+                    <div class="week-link">LINK · piloto</div>
+                  </div>
+                  <div class="week-item">
+                    <div>
+                      <div class="week-day">SEX · 05</div>
+                      <div class="week-title">Testar e medir</div>
+                    </div>
+                    <div class="week-link">LINK · plano de escala</div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="face1-side">
+              <section class="card">
+                <div class="card-label">contrato semanal</div>
+                <div class="contract-grid">
+                  <div class="metric">
+                    <div class="metric-label">blocos</div>
+                    <div class="metric-value">05</div>
+                    <div class="metric-sub">um por dia útil</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">ações</div>
+                    <div class="metric-value">15</div>
+                    <div class="metric-sub">três por bloco</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">links</div>
+                    <div class="metric-value">05</div>
+                    <div class="metric-sub">entregáveis-síntese</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">prioridade</div>
+                    <div class="metric-value" style="font-size:7.8pt;color:var(--accent)">PILOTO</div>
+                    <div class="metric-sub">testar antes de ampliar</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card qr-card">
+                <div class="qr">
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAAAFoAQAAAABSnlx4AAAChElEQVR4nO2ay47jMAwEqxf5/1/uPfAh5RjA8UixMsDEiOvQIAiqRVLmg8+/T+BDH/rQhz70F+kXgOLZAgzCCKz8yrdfVvIM+gVELBGWhQwCI5OBj7dfVvIMOuJdUbVQRNbIMvFzxXwh3T9BCxvbGGRAqlpzs5KH0FFHcCd0hP0PlPwqnfVkRDWjLcuOr+ntOrp3pSPeVTSsjHH9vb1dSfeu9Avm7HbWEoNmI3iDkgfRAoQElB3MJ4Mk6fjBi+jKb71nubDo4i0r3q6je2taGXKBHCYcbOT2J8d/X0Mr7zN1i/Q4HR15rSn719G9K93npbJq1FVe7cajluj0T66jJUa7ZFx4LIRthWNZT/emdARYo0cVVRzinFRb8MV070vL4LB9lo2Unas4J3384EW03P+zH5sOsMu20h6e+n0FXX4vo9o/qo13FvVTvy+hY75jMcwJIFsgRwN89AjX0b01ndUEIP2fes6QXlH3KPl5WlmkpwpSfaqs2ZpSfB3dW9MRc8clJzxgNr9RHZf3KHkGrZzFVwdF2U3pc1LHf19Eawzf5+OSinvtRBw/eA1dI5z03HmrdLewIsUr0dfRvSud+z6T+Y6+STZos6dShnAd3bvSPW9w9U/6Eq8+SG9R8gy664m6ePR6W9fvTvF1dO9K97yhdgVdCxEw7Q4e/30R/bbPU9OcNCl1do652jq6d6Xf9mOh2igV4J7snPy+hn7fj+1tiMjonlzqxPtaWopBGjKebvZ4vLpHyZPo7AVmOlvOi7zr5FxU97a0cLpt5zoyzvW2c15eSXu61MTGT08v54Hxcrq3o8e+Dz2Sr+dqjY9L5zq6d6Xf9+n/UsmhD33oQx/6k89/HPku4w3kdDoAAAAASUVORK5CYII=" alt="QR semântico para abrir a tarefa atual da semana" />
+                </div>
+                <div class="qr-copy">
+                  <b>Abrir tarefa atual</b>
+                  <p>O mesmo QR resolve a ação em aberto, o LINK ou o fechamento da semana.</p>
+                  <div class="qr-code">https://desk-os.app/q/demo-clean-sea-2026-w29?cmd=resolve_current_action</div>
+                </div>
+              </section>
+
+              <section class="card alert">
+                <div class="card-label">risco principal</div>
+                <p>Validar com a operação quem pode alterar o estado “pronto para fechamento”.</p>
+              </section>
+            </aside>
+          </div>
+
+          <footer class="face-footer">
+            <span><b>FACE 01</b> · plano emitido uma vez para a semana</span>
+            <span>V1 · 13/07/2026 · CHECKSUM W29-P2-6F4A</span>
+          </footer>
+        </div>
+      </section>
+
+      <section class="mechanical" aria-label="Área estrutural central">
+        <div class="mechanical-label">área estrutural central
+          <small>base, apoio ou sobreposição da dobra</small>
+        </div>
+        <div class="fold"></div>
+      </section>
+
+      <section class="face-wrap">
+        <div class="face face-2">
+          <header class="face-header">
+            <div class="brand">
+              <div class="brand-mark"></div>
+              <div>
+                <div class="brand-name">deskloop · fractal</div>
+                <div class="brand-tag">face 02 · execução semanal</div>
+              </div>
+            </div>
+            <div class="face-meta">
+              PROJETO P2 · SEMANA 29<br>
+              <b>5 DIAS · 3 AÇÕES · 1 LINK POR DIA</b>
+            </div>
+          </header>
+
+          <div class="execution-grid">
+            <section class="day-table" aria-label="Plano de execução dos cinco dias">
+              <div class="day-row">
+                <div class="day-label">SEG</div>
+                <div class="day-result"><b>Mapear AS-IS</b><span>iniciação</span></div>
+                <div class="actions">
+                  <div class="action"><i class="check"></i>Entrada da demanda</div>
+                  <div class="action"><i class="check"></i>Coleta em campo</div>
+                  <div class="action"><i class="check"></i>Fechamento atual</div>
+                </div>
+                <div class="link"><b>LINK</b><span>Mapa do processo atual</span></div>
+              </div>
+
+              <div class="day-row">
+                <div class="day-label">TER</div>
+                <div class="day-result"><b>Diagnosticar dores</b><span>planejamento</span></div>
+                <div class="actions">
+                  <div class="action"><i class="check"></i>Retrabalho</div>
+                  <div class="action"><i class="check"></i>Atrasos</div>
+                  <div class="action"><i class="check"></i>Perdas de dados</div>
+                </div>
+                <div class="link"><b>LINK</b><span>Diagnóstico priorizado</span></div>
+              </div>
+
+              <div class="day-row">
+                <div class="day-label">QUA</div>
+                <div class="day-result"><b>Desenhar TO-BE</b><span>desenho</span></div>
+                <div class="actions">
+                  <div class="action"><i class="check"></i>Campos padrão</div>
+                  <div class="action"><i class="check"></i>Status e papéis</div>
+                  <div class="action"><i class="check"></i>Regras automáticas</div>
+                </div>
+                <div class="link"><b>LINK</b><span>Fluxo futuro validável</span></div>
+              </div>
+
+              <div class="day-row">
+                <div class="day-label">QUI</div>
+                <div class="day-result"><b>Configurar piloto</b><span>execução</span></div>
+                <div class="actions">
+                  <div class="action"><i class="check"></i>Formulário</div>
+                  <div class="action"><i class="check"></i>Base central</div>
+                  <div class="action"><i class="check"></i>Automação</div>
+                </div>
+                <div class="link"><b>LINK</b><span>Piloto operacional</span></div>
+              </div>
+
+              <div class="day-row">
+                <div class="day-label">SEX</div>
+                <div class="day-result"><b>Testar e medir</b><span>encerramento</span></div>
+                <div class="actions">
+                  <div class="action"><i class="check"></i>Operação real</div>
+                  <div class="action"><i class="check"></i>Comparar tempo</div>
+                  <div class="action"><i class="check"></i>Plano de escala</div>
+                </div>
+                <div class="link"><b>LINK</b><span>Aprendizado e decisão</span></div>
+              </div>
+            </section>
+
+            <aside class="execution-side">
+              <section class="card qr-card" style="grid-template-columns:21mm 1fr;padding:2mm">
+                <div class="qr" style="width:20mm;height:20mm">
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAAAFoAQAAAABSnlx4AAAChElEQVR4nO2ay47jMAwEqxf5/1/uPfAh5RjA8UixMsDEiOvQIAiqRVLmg8+/T+BDH/rQhz70F+kXgOLZAgzCCKz8yrdfVvIM+gVELBGWhQwCI5OBj7dfVvIMOuJdUbVQRNbIMvFzxXwh3T9BCxvbGGRAqlpzs5KH0FFHcCd0hP0PlPwqnfVkRDWjLcuOr+ntOrp3pSPeVTSsjHH9vb1dSfeu9Avm7HbWEoNmI3iDkgfRAoQElB3MJ4Mk6fjBi+jKb71nubDo4i0r3q6je2taGXKBHCYcbOT2J8d/X0Mr7zN1i/Q4HR15rSn719G9K93npbJq1FVe7cajluj0T66jJUa7ZFx4LIRthWNZT/emdARYo0cVVRzinFRb8MV070vL4LB9lo2Unas4J3384EW03P+zH5sOsMu20h6e+n0FXX4vo9o/qo13FvVTvy+hY75jMcwJIFsgRwN89AjX0b01ndUEIP2fes6QXlH3KPl5WlmkpwpSfaqs2ZpSfB3dW9MRc8clJzxgNr9RHZf3KHkGrZzFVwdF2U3pc1LHf19Eawzf5+OSinvtRBw/eA1dI5z03HmrdLewIsUr0dfRvSud+z6T+Y6+STZos6dShnAd3bvSPW9w9U/6Eq8+SG9R8gy664m6ePR6W9fvTvF1dO9K97yhdgVdCxEw7Q4e/30R/bbPU9OcNCl1do652jq6d6Xf9mOh2igV4J7snPy+hn7fj+1tiMjonlzqxPtaWopBGjKebvZ4vLpHyZPo7AVmOlvOi7zr5FxU97a0cLpt5zoyzvW2c15eSXu61MTGT08v54Hxcrq3o8e+Dz2Sr+dqjY9L5zq6d6Xf9+n/UsmhD33oQx/6k89/HPku4w3kdDoAAAAASUVORK5CYII=" alt="QR semântico para abrir a tarefa atual da semana" />
+                </div>
+                <div class="qr-copy">
+                  <b>Continuar no app</b>
+                  <p>Resolve a próxima ação disponível.</p>
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card-label">recycle semanal</div>
+                <div class="recycle">
+                  <div class="recycle-option"><i class="check"></i>Continuar</div>
+                  <div class="recycle-option"><i class="check"></i>Reduzir</div>
+                  <div class="recycle-option"><i class="check"></i>Dividir</div>
+                  <div class="recycle-option"><i class="check"></i>Reconfigurar</div>
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card-label">fechamento</div>
+                <div class="note-lines">
+                  <div class="note-line"><label>entrega principal</label><div class="rule"></div></div>
+                  <div class="note-line"><label>bloqueio</label><div class="rule"></div></div>
+                  <div class="note-line"><label>próxima ação</label><div class="rule"></div></div>
+                </div>
+              </section>
+            </aside>
+          </div>
+
+          <footer class="face-footer">
+            <span><b>FACE 02</b> · marcação manual + estado digital pelo QR</span>
+            <span>IMPRIMIR 100% · A4 RETRATO · UMA FACE</span>
+          </footer>
+        </div>
+      </section>
+
+      <section class="mechanical" aria-label="Área estrutural inferior">
+        <div class="mechanical-label">área estrutural inferior
+          <small>trava, apoio e fechamento do objeto</small>
+        </div>
+      </section>
+
+    </div>
+  </article>
+
+  <p class="screen-note">
+    Protótipo em <code>A4 retrato 210 × 297 mm</code>. As duas áreas úteis são horizontais.
+    A Face 2 está rotacionada em 180° para leitura correta após a dobra.
+    Use o botão <b>Guias</b> para ocultar as áreas estruturais na visualização.
+  </p>
+</main>
+</body>
+</html>

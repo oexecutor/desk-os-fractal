@@ -1,0 +1,13 @@
+{
+  "name": "desk-os-fractal",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "validate:contracts": "node scripts/validate-contracts.mjs"
+  },
+  "bootstrap_note": "Claude Code deve adicionar packageManager e engines após consultar versões oficiais atuais e gerar lockfile."
+}

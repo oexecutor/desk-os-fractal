@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://desk-os.app/schemas/source-artifact.schema.json",
+  "title": "SourceArtifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "workspace_id",
+    "kind",
+    "filename",
+    "media_type",
+    "size_bytes",
+    "sha256",
+    "created_at",
+    "retention"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "workspace_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "kind": {
+      "enum": [
+        "text",
+        "markdown",
+        "json",
+        "pdf",
+        "docx"
+      ]
+    },
+    "filename": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "media_type": {
+      "type": "string",
+      "minLength": 3
+    },
+    "size_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "language": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "keep_original"
+      ],
+      "properties": {
+        "keep_original": {
+          "type": "boolean"
+        },
+        "delete_after": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

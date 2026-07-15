@@ -1,227 +1,98 @@
-# DESK-OS / TAL de Fractal
+# DESK-OS / TAL de Fractal — pacote autossuficiente para Claude Code
 
-Sistema operacional de execução assistida por IA que transforma projetos e
-portfólios em planos estruturados, sprints, ações atômicas, dashboards físicos
-semanais e fluxos sincronizados por QR semântico.
+**Versão:** 1.1.0  
+**Status:** contrato inicial aprovado para construção do zero  
+**Idioma normativo:** português do Brasil
 
-> Status: implementação inicial. Repositório privado e código proprietário.
+Este repositório é a fonte de verdade para construir o DESK-OS / TAL de Fractal sem depender de protótipos, ZIPs ou códigos anteriores. Ele contém visão de produto, PRD, requisitos, ADRs, modelo de domínio, schemas, API, UX, especificação do dashboard físico de duas faces, segurança, testes, backlog e instruções específicas para Claude Code.
 
-## Visão
+## Resultado esperado
 
-```text
-arquivo, texto ou JSON
-        ↓
-ingestão e normalização
-        ↓
-projeto único ou portfólio
-        ↓
-decomposição fractal assistida por IA
-        ↓
-revisão e aprovação humana
-        ↓
-plano ativo
-        ↓
-frontend + sprint + impressão + QR
-```
+Construir um sistema web-first que:
 
-O usuário entrega contexto. O sistema transforma esse contexto em uma estrutura
-executável, rastreável e adaptada ao momento de trabalho.
+1. recebe um projeto ou portfólio por arquivo, texto ou JSON;
+2. extrai e normaliza o conteúdo;
+3. identifica projeto único ou múltiplos projetos;
+4. gera uma decomposição hierárquica validada;
+5. exige aprovação humana antes de permitir execução;
+6. apresenta a estrutura em um frontend fractal por zoom;
+7. projeta o mesmo estado em sprint, modo foco e dashboard físico;
+8. sincroniza progresso, evidências e decisões;
+9. usa QR Codes semânticos e estáveis para abrir ou atualizar contexto;
+10. opera como PWA e, posteriormente, como aplicativo Capacitor.
 
-## Proposta de valor
+## Regra central do produto
 
-- importar projetos sem reconstrução manual;
-- decompor automaticamente projetos e portfólios;
-- apresentar somente o nível de detalhe necessário;
-- organizar a semana em blocos de baixa carga cognitiva;
-- integrar aplicação digital e dashboard físico;
-- usar QR semântico para abrir a ação disponível no momento;
-- preservar aprovação humana e critérios verificáveis de conclusão.
-
-## Modelo fractal
+A árvore é dinâmica nos níveis superiores. O bloco operacional ativo segue preferencialmente:
 
 ```text
-workspace
-└── portfólio opcional
-    └── projeto
-        └── fase ou semana
-            └── bloco
-                ├── ação 1
-                ├── ação 2
-                ├── ação 3
-                └── LINK
+Projeto → Dia/Bloco → 3 ações atômicas → 1 entregável-síntese (LINK)
 ```
 
-As cardinalidades superiores são dinâmicas. O bloco operacional padrão possui
-três ações e um entregável-síntese chamado `LINK`.
+As cardinalidades `9 × 3 × 3` e `5 × 5 × 3` são exemplos de projeção, não regras universais.
 
-## Aplicação
+## Emissão física — contrato v1.1.0
 
-- intake por arquivo, texto ou JSON;
-- projeto único e portfólio;
-- navegação por zoom fractal;
-- revisão e aprovação;
-- sprint e modo foco;
-- estado, eventos e evidências;
-- emissão semanal;
-- geração e leitura de QR;
-- PWA web-first;
-- backend serverless para Netlify.
+O artefato é uma única folha A4 retrato, impressa em um lado e dobrada para formar duas faces horizontais:
 
-## Dashboard físico
+- **Face 1 — Visão e contrato semanal:** resultado dominante, definição de concluído, cinco blocos planejados, riscos e QR.
+- **Face 2 — Execução semanal:** SEG–SEX, três ações e um LINK por bloco, marcação manual, Recycle e fechamento.
 
-Uma folha A4 retrato, impressa em um lado e dobrada para formar duas faces
-horizontais.
+O conteúdo é estático durante a semana. O aplicativo permanece dinâmico. O mesmo QR semântico resolve a tarefa aberta, o LINK ou o fechamento no momento do escaneamento.
 
-### Face 1 — contrato semanal
+## Como usar com Claude Code
 
-- resultado dominante;
-- definição de concluído;
-- cinco blocos;
-- riscos e dependências;
-- identificação da semana;
-- QR semântico.
+1. Extraia este pacote em uma pasta vazia.
+2. Abra a pasta no Claude Code.
+3. Cole o conteúdo de `claude-code/MASTER_PROMPT.md`.
+4. Execute primeiro o comando `/project-audit`.
+5. Siga `implementation/ROADMAP.md` e pare nos gates indicados.
+6. Não comece pelo frontend. O primeiro artefato de implementação é o contrato canônico validado.
 
-### Face 2 — execução semanal
+## Ordem de leitura obrigatória
 
-- SEG a SEX;
-- três ações por bloco;
-- um LINK por bloco;
-- marcação manual;
-- Recycle e fechamento;
-- o mesmo QR da Face 1.
+1. `CLAUDE.md`
+2. `product/PRD.md`
+3. `product/REQUIREMENTS.md`
+4. `architecture/SYSTEM_ARCHITECTURE.md`
+5. `architecture/ADR/`
+6. `specs/CANONICAL_DOMAIN_MODEL.md`
+7. `specs/STATE_AND_EVENT_MODEL.md`
+8. `specs/DECOMPOSITION_ENGINE.md`
+9. `specs/FRONTEND_FRACTAL.md`
+10. `specs/PHYSICAL_DASHBOARD_TWO_FACES.md`
+11. `api/openapi.yaml`
+12. `qa/ACCEPTANCE_TESTS.feature`
+13. `implementation/ROADMAP.md`
 
-O papel permanece estático durante a semana. O aplicativo é a fonte de verdade
-dinâmica.
+## Autoridade dos artefatos
 
-## QR semântico
+Em caso de conflito, prevalece esta ordem:
 
-```text
-kind: OPEN_CURRENT_ACTION
-strategy: CURRENT_ACTION
-```
+1. ADR aceito mais recente;
+2. schemas JSON;
+3. OpenAPI;
+4. especificações em `specs/`;
+5. PRD e requisitos;
+6. exemplos, wireframes e referências visuais.
 
-O backend resolve, nesta ordem:
+## Restrições essenciais
 
-1. ação em andamento;
-2. primeira ação pendente elegível;
-3. LINK do bloco;
-4. fechamento do dia;
-5. próximo bloco;
-6. Recycle semanal.
+- Nenhuma ação externa automática sem confirmação do usuário.
+- Um plano `BLOQUEADO` nunca pode alimentar execução, impressão ou QR mutável.
+- `workspace_id` não é autenticação.
+- IDs não podem depender de data, índice de lista ou resposta instável do modelo.
+- QRs impressos devem usar domínio/router estável.
+- O papel deve funcionar offline como snapshot.
+- Não produzir claims clínicos ou terapêuticos.
+- A interface deve ser de baixa densidade, responsiva e acessível por teclado.
 
-GET nunca altera estado. Mutações exigem confirmação, idempotência e controle
-de versão.
+## Execução local e release Netlify
 
-## Arquitetura planejada
+Para solicitar a construção completa sem push e sem deploy, use:
 
-```text
-apps/
-  web/
-  functions/
+`PROMPT_CLAUDE_CODE_BUILD_LOCAL_NETLIFY.md`
 
-packages/
-  domain/
-  schemas/
-  ingestion/
-  agents/
-  decomposition/
-  approval/
-  events/
-  storage/
-  qr/
-  print/
-  ui/
-  client-sdk/
+Saída exigida do Claude Code:
 
-tests/
-  contract/
-  integration/
-  e2e/
-  accessibility/
-  print/
-```
-
-Arquitetura: modular monolith TypeScript, web-first.
-
-## Stack de referência
-
-- Node.js 24 LTS
-- pnpm 11
-- TypeScript 6
-- React e Vite
-- Ajv Draft 2020-12
-- Playwright
-- Netlify Functions
-- Netlify Blobs por adapter
-- PWA
-
-As versões exatas devem ser fixadas no lockfile.
-
-## Execução local
-
-```bash
-corepack enable
-pnpm install --frozen-lockfile
-pnpm validate
-pnpm test
-pnpm build
-npx netlify-cli build
-```
-
-Desenvolvimento:
-
-```bash
-pnpm dev
-```
-
-O projeto deve funcionar em modo mock sem chave de LLM.
-
-## Variáveis de ambiente
-
-```bash
-cp .env.example .env.local
-```
-
-Nunca versione arquivos `.env`.
-
-## Deploy
-
-O deploy será realizado pela Netlify por integração Git ou Netlify CLI. O
-`netlify.toml` será a fonte de verdade para build, publicação, Functions,
-redirects e headers.
-
-## Qualidade
-
-Checks planejados:
-
-`lint`, `typecheck`, `test`, `contract-validation`, `build`, `netlify-build`.
-
-## Segurança
-
-- nenhuma chave no cliente;
-- nenhum dado real em fixtures públicas;
-- `workspace_id` não substitui autenticação;
-- planos bloqueados não executam nem imprimem;
-- conteúdo do usuário não usa `innerHTML`;
-- menor privilégio e logs sem segredos;
-- nenhuma alegação clínica.
-
-## Estado
-
-- [x] conceito e arquitetura;
-- [x] contratos iniciais;
-- [x] dashboard físico;
-- [x] QR semântico;
-- [ ] bootstrap;
-- [ ] domínio e validação;
-- [ ] ingestão e decomposição;
-- [ ] frontend e backend;
-- [ ] impressão dinâmica;
-- [ ] PWA;
-- [ ] release Netlify.
-
-## Licença
-
-Copyright © 2026 Leonardo Batista. All Rights Reserved.
-
-Consulte [`LICENSE`](LICENSE).
+`release/desk-os-netlify-release-v1.1.0.zip`

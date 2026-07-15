@@ -1,0 +1,29 @@
+{
+  "name": "@desk-os/ingestion",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Upload/text intake pipeline: SourceArtifact, extractors, ExtractedDocument.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@desk-os/domain": "workspace:*",
+    "@desk-os/schemas": "workspace:*",
+    "pdf-parse": "2.4.5",
+    "mammoth": "1.12.0"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/node": "22.20.1"
+  }
+}

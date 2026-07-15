@@ -1,0 +1,13 @@
+{
+  "description": "Fixture conceitual; deve falhar invariantes de ciclo",
+  "nodes": [
+    {
+      "id": "A",
+      "parent_id": "B"
+    },
+    {
+      "id": "B",
+      "parent_id": "A"
+    }
+  ]
+}

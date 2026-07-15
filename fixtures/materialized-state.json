@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "workspace_id": "01J2DESKOSWORKSPACE000001",
+  "plan_version_id": "01J2DESKOSPLANVERSION00001",
+  "stream_version": 3,
+  "node_states": {
+    "01J2DESKOSACTIONFIELDS00001": {
+      "status": "DONE",
+      "started_at": "2026-07-15T09:00:00Z",
+      "completed_at": "2026-07-15T09:35:00Z",
+      "blocked_reason": null,
+      "evidence_count": 1,
+      "updated_at": "2026-07-15T09:35:00Z"
+    },
+    "01J2DESKOSACTIONSTATUS00001": {
+      "status": "IN_PROGRESS",
+      "started_at": "2026-07-15T09:40:00Z",
+      "completed_at": null,
+      "blocked_reason": null,
+      "evidence_count": 0,
+      "updated_at": "2026-07-15T09:40:00Z"
+    },
+    "01J2DESKOSACTIONRULES000001": {
+      "status": "TODO",
+      "started_at": null,
+      "completed_at": null,
+      "blocked_reason": null,
+      "evidence_count": 0,
+      "updated_at": "2026-07-15T09:40:00Z"
+    },
+    "01J2DESKOSSYNTHESISFLOW0001": {
+      "status": "TODO",
+      "started_at": null,
+      "completed_at": null,
+      "blocked_reason": null,
+      "evidence_count": 0,
+      "updated_at": "2026-07-15T09:40:00Z"
+    }
+  },
+  "focused_node_id": "01J2DESKOSACTIONSTATUS00001",
+  "updated_at": "2026-07-15T09:40:00Z"
+}

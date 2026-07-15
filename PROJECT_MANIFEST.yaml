@@ -1,0 +1,29 @@
+project:
+  id: desk-os-fractal
+  name: DESK-OS / TAL de Fractal
+  version: 1.0.0
+  status: approved-for-bootstrap
+  language: pt-BR
+  architecture_style: modular-monolith
+  delivery:
+    web: pwa
+    mobile: capacitor-after-web-core
+    backend: serverless-functions
+    storage_pilot: netlify-blobs-adapter
+  primary_outcomes:
+    - automatic_project_ingestion
+    - canonical_recursive_decomposition
+    - human_approval_gate
+    - fractal_navigation
+    - focus_execution
+    - two_face_physical_dashboard
+    - stable_semantic_qr
+  authoritative_documents:
+    - CLAUDE.md
+    - product/PRD.md
+    - product/REQUIREMENTS.md
+    - architecture/ADR/
+    - specs/
+    - schemas/
+    - api/openapi.yaml
+    - qa/ACCEPTANCE_TESTS.feature

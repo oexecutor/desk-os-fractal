@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DESK-OS · Dashboard físico de duas faces</title>
+<style>
+:root {
+  --bg: #f7f6f3;
+  --paper: #fffefb;
+  --surface: #ffffff;
+  --ink: #14140f;
+  --ink-soft: #5c5b52;
+  --ink-faint: #9d9b90;
+  --line: #e3e1d8;
+  --line-strong: #c9c6b9;
+  --accent: #1f4b3f;
+  --accent-soft: #dce8e2;
+  --amber: #b3792c;
+  --amber-soft: #f3e6d2;
+  --clay: #a8492f;
+  --clay-soft: #f2dcd3;
+  --blue: #2a5f8c;
+  --blue-soft: #dce7f0;
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Arial, sans-serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, Menlo, monospace;
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+html { background: #d8d6cf; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.75), transparent 28rem),
+    #d8d6cf;
+  -webkit-font-smoothing: antialiased;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 20px;
+  background: rgba(20,20,15,.92);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+.toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.toolbar-mark {
+  width: 18px;
+  height: 18px;
+  background: white;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.2);
+}
+.toolbar-title strong {
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+.toolbar-title span {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,.62);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+.toolbar button {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.07);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 3px;
+  font: 600 11px var(--sans);
+  cursor: pointer;
+}
+.toolbar button:hover { background: rgba(255,255,255,.14); }
+
+.stage {
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: 26px;
+}
+
+.sheet {
+  width: 297mm;
+  min-height: 210mm;
+  margin: 0 auto 26px;
+  padding: 10mm;
+  background: var(--paper);
+  box-shadow: 0 18px 60px rgba(20,20,15,.18);
+  border: 1px solid rgba(20,20,15,.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(20,20,15,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,20,15,.018) 1px, transparent 1px);
+  background-size: 6mm 6mm;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%);
+}
+
+.face {
+  position: relative;
+  z-index: 1;
+  min-height: 190mm;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 5mm;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10mm;
+  align-items: end;
+  padding-bottom: 4mm;
+  border-bottom: 1px solid var(--line-strong);
+}
+.brand {
+  display: flex;
+  gap: 4mm;
+  align-items: center;
+}
+.brand-mark {
+  width: 7mm;
+  height: 7mm;
+  background: var(--ink);
+  position: relative;
+  flex: 0 0 auto;
+}
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 1.2mm;
+  border: .35mm solid var(--paper);
+}
+.brand-name {
+  font-size: 15pt;
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+.brand-tag {
+  margin-top: .6mm;
+  font: 7.5pt var(--mono);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.face-meta {
+  text-align: right;
+  font: 7.2pt/1.5 var(--mono);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.face-meta b { color: var(--ink); font-weight: 700; }
+
+.trail {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  flex-wrap: wrap;
+  font: 7.2pt var(--mono);
+}
+.crumb {
+  padding: 1.4mm 2.7mm;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+}
+.crumb.current {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.sep { color: var(--ink-faint); }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr .8fr;
+  gap: 5mm;
+  min-height: 0;
+}
+
+.main-stack,
+.side-stack {
+  display: grid;
+  gap: 4mm;
+  min-height: 0;
+}
+.main-stack { grid-template-rows: auto auto 1fr; }
+.side-stack { grid-template-rows: auto auto 1fr; }
+
+.card {
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,.88);
+  border-radius: var(--radius);
+  padding: 4mm;
+  min-width: 0;
+}
+.card-label {
+  font: 6.8pt var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-faint);
+  margin-bottom: 2mm;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 5mm;
+  align-items: center;
+  border-left: 1.5mm solid var(--accent);
+}
+.hero-kicker {
+  font: 7.2pt var(--mono);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 1.4mm;
+}
+.hero h1 {
+  margin: 0;
+  max-width: 180mm;
+  font-size: 18pt;
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+.hero p {
+  margin: 2mm 0 0;
+  color: var(--ink-soft);
+  font-size: 8.4pt;
+}
+.hero-id {
+  text-align: right;
+  white-space: nowrap;
+  font: 7.2pt/1.6 var(--mono);
+  color: var(--ink-faint);
+}
+.hero-id b { color: var(--ink); }
+
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3mm;
+}
+.metric {
+  padding: 3.2mm;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  min-height: 22mm;
+}
+.metric-label {
+  font: 6.5pt var(--mono);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.metric-value {
+  margin-top: 1.5mm;
+  font: 700 16pt var(--mono);
+  letter-spacing: -.04em;
+}
+.metric-sub {
+  margin-top: .8mm;
+  font-size: 7pt;
+  color: var(--ink-soft);
+}
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2.5mm;
+  align-items: stretch;
+}
+.project {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 34mm;
+  padding: 3mm;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.project.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 1.2mm 0 var(--accent);
+}
+.project-id {
+  font: 6.2pt var(--mono);
+  color: var(--ink-faint);
+}
+.project-title {
+  margin-top: 3mm;
+  font-size: 7.5pt;
+  font-weight: 700;
+  line-height: 1.28;
+}
+.progress {
+  height: 1.1mm;
+  margin-top: 2.5mm;
+  background: var(--line);
+  overflow: hidden;
+}
+.progress > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.project-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 2mm;
+  margin-top: 1.5mm;
+  font: 5.8pt var(--mono);
+  color: var(--ink-faint);
+}
+
+.ring-card {
+  display: grid;
+  grid-template-columns: 26mm 1fr;
+  gap: 4mm;
+  align-items: center;
+}
+.ring {
+  width: 25mm;
+  height: 25mm;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--accent) 0 62%, var(--line) 62% 100%);
+  position: relative;
+}
+.ring::after {
+  content: "";
+  width: 18mm;
+  height: 18mm;
+  border-radius: 50%;
+  background: var(--surface);
+  position: absolute;
+}
+.ring strong {
+  position: relative;
+  z-index: 1;
+  font: 700 10pt var(--mono);
+}
+.ring-copy b {
+  display: block;
+  font-size: 9pt;
+  margin-bottom: 1mm;
+}
+.ring-copy span {
+  font-size: 7pt;
+  color: var(--ink-soft);
+}
+
+.status-list {
+  display: grid;
+  gap: 1.5mm;
+}
+.status-row {
+  display: grid;
+  grid-template-columns: 16mm 1fr auto;
+  align-items: center;
+  gap: 2mm;
+  padding: 2.2mm 0;
+  border-bottom: 1px solid var(--line);
+}
+.status-row:last-child { border-bottom: 0; }
+.status-day {
+  font: 700 6.6pt var(--mono);
+  color: var(--accent);
+}
+.status-title {
+  font-size: 7pt;
+}
+.pill {
+  padding: 1mm 2mm;
+  border-radius: 2px;
+  font: 6pt var(--mono);
+  white-space: nowrap;
+}
+.pill.done { background: var(--accent-soft); color: var(--accent); }
+.pill.active { background: var(--amber-soft); color: var(--amber); }
+.pill.next { background: var(--bg); color: var(--ink-faint); border: 1px solid var(--line); }
+
+.qr-card {
+  display: grid;
+  grid-template-columns: 30mm 1fr;
+  gap: 4mm;
+  align-items: center;
+}
+.qr-box {
+  width: 29mm;
+  height: 29mm;
+  border: 1px solid var(--line-strong);
+  padding: 2mm;
+  background: white;
+}
+.qr-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+.qr-copy b {
+  display: block;
+  font-size: 8pt;
+  margin-bottom: 1mm;
+}
+.qr-copy p {
+  margin: 0 0 2mm;
+  color: var(--ink-soft);
+  font-size: 7pt;
+  line-height: 1.45;
+}
+.qr-code {
+  font: 6.2pt var(--mono);
+  color: var(--ink-faint);
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6mm;
+  align-items: center;
+  padding-top: 3mm;
+  border-top: 1px solid var(--line-strong);
+  font: 6.2pt var(--mono);
+  color: var(--ink-faint);
+}
+.footer strong { color: var(--ink-soft); }
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 5mm;
+}
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+}
+.dot {
+  width: 2.6mm;
+  height: 2.6mm;
+  border-radius: 50%;
+  border: .35mm solid var(--line-strong);
+}
+.dot.done { background: var(--accent); border-color: var(--accent); }
+.dot.active { background: var(--amber); border-color: var(--amber); }
+.dot.blocked { background: var(--clay); border-color: var(--clay); }
+
+/* FACE 2 */
+.execution-grid {
+  display: grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap: 5mm;
+  min-height: 0;
+}
+.execution-main {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 4mm;
+}
+.execution-side {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 4mm;
+}
+.now {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 5mm;
+  align-items: start;
+  border-left: 1.5mm solid var(--amber);
+}
+.now-label {
+  font: 7.2pt var(--mono);
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.now h1 {
+  margin: 1.5mm 0 0;
+  font-size: 18pt;
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+.now p {
+  margin: 2mm 0 0;
+  font-size: 8pt;
+  color: var(--ink-soft);
+}
+.day-badge {
+  min-width: 28mm;
+  padding: 3mm;
+  text-align: center;
+  background: var(--ink);
+  color: var(--paper);
+}
+.day-badge b {
+  display: block;
+  font: 700 13pt var(--mono);
+}
+.day-badge span {
+  font: 6.2pt var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.65);
+}
+
+.next-action {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 3mm;
+  align-items: center;
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.next-index {
+  width: 9mm;
+  height: 9mm;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: white;
+  font: 700 8pt var(--mono);
+}
+.next-copy b {
+  display: block;
+  font-size: 9pt;
+}
+.next-copy span {
+  display: block;
+  margin-top: .8mm;
+  font-size: 7pt;
+  color: var(--accent);
+}
+.next-state {
+  font: 6.4pt var(--mono);
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3mm;
+}
+.task {
+  min-height: 48mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  padding: 4mm;
+}
+.task.current {
+  border-color: var(--accent);
+  box-shadow: inset 0 1.2mm 0 var(--accent);
+}
+.task-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 2mm;
+}
+.task-num {
+  font: 7pt var(--mono);
+  color: var(--ink-faint);
+}
+.task-tag {
+  padding: 1mm 2mm;
+  background: var(--bg);
+  color: var(--ink-faint);
+  font: 5.8pt var(--mono);
+  text-transform: uppercase;
+}
+.task.current .task-tag {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.task h2 {
+  margin: 5mm 0 2mm;
+  font-size: 10.5pt;
+  line-height: 1.2;
+}
+.task p {
+  margin: 0;
+  font-size: 7pt;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.checkline {
+  margin-top: 3mm;
+  padding-top: 2.5mm;
+  border-top: 1px dashed var(--line-strong);
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  font: 6.4pt var(--mono);
+  color: var(--ink-faint);
+}
+.box {
+  width: 4mm;
+  height: 4mm;
+  border: .35mm solid var(--line-strong);
+  background: white;
+}
+
+.link-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 3mm;
+  align-items: center;
+  background: var(--amber-soft);
+  border-color: var(--amber);
+}
+.link-icon {
+  width: 10mm;
+  height: 10mm;
+  display: grid;
+  place-items: center;
+  border: .45mm solid var(--amber);
+  color: var(--amber);
+  font: 700 8pt var(--mono);
+}
+.link-card b {
+  display: block;
+  color: var(--amber);
+  font-size: 9pt;
+}
+.link-card span {
+  display: block;
+  margin-top: .8mm;
+  font-size: 7pt;
+  color: #76531f;
+}
+.link-status {
+  font: 6.4pt var(--mono);
+  color: var(--amber);
+  text-transform: uppercase;
+}
+
+.form-lines {
+  display: grid;
+  gap: 3mm;
+}
+.line-field label {
+  display: block;
+  font: 6.3pt var(--mono);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 1mm;
+}
+.line {
+  height: 5mm;
+  border-bottom: .3mm solid var(--line-strong);
+}
+
+.recycle-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2mm;
+}
+.option {
+  min-height: 12mm;
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  padding: 2mm;
+  border: 1px solid var(--line);
+  font-size: 7pt;
+  background: var(--surface);
+}
+.option .box { flex: 0 0 auto; }
+
+.blocker {
+  background: var(--clay-soft);
+  border-color: var(--clay);
+}
+.blocker .card-label { color: var(--clay); }
+.blocker p {
+  margin: 0;
+  font-size: 7.2pt;
+  color: #6f3022;
+  line-height: 1.45;
+}
+
+.print-note {
+  display: none;
+}
+
+@media screen and (max-width: 1100px) {
+  .sheet {
+    width: 100%;
+    min-height: 0;
+    padding: 22px;
+  }
+  .face { min-height: 0; }
+  .dashboard-grid,
+  .execution-grid { grid-template-columns: 1fr; }
+  .projects { grid-template-columns: repeat(2, 1fr); }
+  .summary-row { grid-template-columns: 1fr; }
+  .task-grid { grid-template-columns: 1fr; }
+}
+
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+@media print {
+  html, body {
+    background: white !important;
+  }
+  .toolbar {
+    display: none !important;
+  }
+  .stage {
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+  .sheet {
+    width: 297mm;
+    height: 210mm;
+    min-height: 210mm;
+    margin: 0;
+    padding: 10mm;
+    border: 0;
+    box-shadow: none;
+    page-break-after: always;
+    break-after: page;
+  }
+  .sheet:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+  .print-note {
+    display: block;
+    position: absolute;
+    right: 10mm;
+    bottom: 4mm;
+    font: 5.8pt var(--mono);
+    color: var(--ink-faint);
+  }
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="toolbar-title">
+    <div class="toolbar-mark"></div>
+    <div>
+      <strong>DESK-OS · dashboard físico</strong><br>
+      <span>duas faces · identidade do app · A4 paisagem</span>
+    </div>
+  </div>
+  <div class="toolbar-actions">
+    <button onclick="document.getElementById('face1').scrollIntoView({behavior:'smooth'})">Face 1</button>
+    <button onclick="document.getElementById('face2').scrollIntoView({behavior:'smooth'})">Face 2</button>
+    <button onclick="window.print()">Imprimir / PDF</button>
+  </div>
+</div>
+
+<main class="stage">
+
+<section class="sheet" id="face1">
+  <div class="face">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div>
+          <div class="brand-name">deskloop · fractal</div>
+          <div class="brand-tag">dashboard físico · visão e orientação</div>
+        </div>
+      </div>
+      <div class="face-meta">
+        FACE 01 · DASHBOARD<br>
+        <b>PORTFÓLIO / PROJETO / SEMANA</b>
+      </div>
+    </header>
+
+    <nav class="trail" aria-label="Trilha fractal">
+      <span class="crumb">portfólio</span>
+      <span class="sep">/</span>
+      <span class="crumb">P2 · Clean Sea</span>
+      <span class="sep">/</span>
+      <span class="crumb current">semana ativa</span>
+    </nav>
+
+    <div class="dashboard-grid">
+      <div class="main-stack">
+        <section class="card hero">
+          <div>
+            <div class="hero-kicker">resultado dominante · semana 29</div>
+            <h1>Desenhar e validar o fluxo digital da operação Clean Sea</h1>
+            <p>Do diagnóstico das dores ao piloto testado em operação real.</p>
+          </div>
+          <div class="hero-id">
+            USER <b>JOÃO</b><br>
+            PROJECT <b>P2</b><br>
+            SPRINT <b>2026-W29</b>
+          </div>
+        </section>
+
+        <section class="summary-row">
+          <div class="metric">
+            <div class="metric-label">progresso da semana</div>
+            <div class="metric-value">62%</div>
+            <div class="metric-sub">9 de 15 ações concluídas</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">entregáveis fechados</div>
+            <div class="metric-value">2/5</div>
+            <div class="metric-sub">iniciação e diagnóstico</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">estado atual</div>
+            <div class="metric-value" style="font-size:13pt;color:var(--amber)">EM CURSO</div>
+            <div class="metric-sub">planejamento · desenho</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-label">portfólio · visão condensada</div>
+          <div class="projects">
+            <article class="project">
+              <div>
+                <div class="project-id">P1 · 01</div>
+                <div class="project-title">Iniciação científica CENIP</div>
+              </div>
+              <div>
+                <div class="progress"><span style="width:100%"></span></div>
+                <div class="project-foot"><span>15/15</span><span>fechado</span></div>
+              </div>
+            </article>
+
+            <article class="project active">
+              <div>
+                <div class="project-id">P2 · 02</div>
+                <div class="project-title">Digitalização Clean Sea</div>
+              </div>
+              <div>
+                <div class="progress"><span style="width:62%"></span></div>
+                <div class="project-foot"><span>9/15</span><span>ativo</span></div>
+              </div>
+            </article>
+
+            <article class="project">
+              <div>
+                <div class="project-id">P3 · 03</div>
+                <div class="project-title">Cidadania portuguesa</div>
+              </div>
+              <div>
+                <div class="progress"><span style="width:0%"></span></div>
+                <div class="project-foot"><span>0/15</span><span>próximo</span></div>
+              </div>
+            </article>
+
+            <article class="project">
+              <div>
+                <div class="project-id">P4 · 04</div>
+                <div class="project-title">Instagram · rotina marítima</div>
+              </div>
+              <div>
+                <div class="progress"><span style="width:0%"></span></div>
+                <div class="project-foot"><span>0/15</span><span>fila</span></div>
+              </div>
+            </article>
+
+            <article class="project">
+              <div>
+                <div class="project-id">P5 · 05</div>
+                <div class="project-title">Negócio próprio · vendas</div>
+              </div>
+              <div>
+                <div class="progress"><span style="width:0%"></span></div>
+                <div class="project-foot"><span>0/15</span><span>fila</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <aside class="side-stack">
+        <section class="card ring-card">
+          <div class="ring"><strong>62%</strong></div>
+          <div class="ring-copy">
+            <b>Progresso do bloco</b>
+            <span>Estado sincronizado com o projeto ativo no aplicativo.</span>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-label">semana ativa · mapa dos cinco dias</div>
+          <div class="status-list">
+            <div class="status-row">
+              <span class="status-day">SEG</span>
+              <span class="status-title">Mapear AS-IS</span>
+              <span class="pill done">3/3</span>
+            </div>
+            <div class="status-row">
+              <span class="status-day">TER</span>
+              <span class="status-title">Diagnosticar dores</span>
+              <span class="pill done">3/3</span>
+            </div>
+            <div class="status-row">
+              <span class="status-day">QUA</span>
+              <span class="status-title">Desenhar TO-BE</span>
+              <span class="pill active">2/3</span>
+            </div>
+            <div class="status-row">
+              <span class="status-day">QUI</span>
+              <span class="status-title">Configurar piloto</span>
+              <span class="pill next">0/3</span>
+            </div>
+            <div class="status-row">
+              <span class="status-day">SEX</span>
+              <span class="status-title">Testar e medir</span>
+              <span class="pill next">0/3</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card qr-card">
+          <div class="qr-box">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXIAAAFyAQAAAADAX2ykAAACoklEQVR4nO2aTY7bMAxGHysBs5SBHGCOIt9sztQbWEfJAQLYywAy2IUkx5P5aQf1uHFBLoIIfosPIChRnyjKVyL9+BIOxhtvvPHGG2/8R7zU8Ih0s5DEU36Y2rd+Rz3Gb8xHVVUdgXh+Ki2XvOhVAKeqqvqa/249xm/MT0uFAtIDOkxPKj0gIn5vPcZvw/u7tabnq0C4CISr7K7H+G35+/xKPHuIAypM9x930GP8tnxLYVBgAk2dy6RuBMKIAKwtkEfTb/znUfObyk7skDiekHj2mfjTZ2B+tUk/mn7jP4+S31uFKmRIHaJwlVrY++kxfluecvmJmus6jk6JI0DIQNC6jKqqw6PpN/7zqPWbugsQRoCaaU29f13Ye+gxflu+5Ffi2aOpF5TplCFkX9M9nbIyuVbej6bf+N9Ecad0BFXNqI6LYRVaJQ9B1fbnA/PS45QkTwrMxYlencTlON5Rj/Fb8Uv/fBUlXETLcuqEJHVXXl+QHk2/8X/CS49TimEV6luCDuEqOoS6Z++qx/hv4KUPWpOcOpCX0alI58ojw/56jN+AXyzm2SuTz6TeIVFnX1tnQNNztvvRMXlar7z+aZ003PyN0lRb/3wwvuUX0AGnOqxuRRnA1cTb/eiI/Cq/xaSMo1MdWhG3qHdiy+/R+OV98OKVqUNT5xDC7CFcFmwWO38PyTf/qkWr31zsLKLezmSr36Pyt/lJynwOLPOT/h3+u/UYvzH/Zn5yMTRChjguj/wPqt/4j6LtylTDmaC1iV65ztY//z/8JLJyKm+F/a/0GP83/Jv5WKau/ktSHv498We3lx7jt+Xv5ycBEMIIcTxlwKmkzmXZR4/x2/JrfwNuo1e3Xdm1TdrO3wPy78xPLos2Omnzz8Ybb7zxxhu/Lf8LF9KOE+8dqOQAAAAASUVORK5CYII=" alt="QR do dashboard do projeto">
+          </div>
+          <div class="qr-copy">
+            <b>Abrir este contexto</b>
+            <p>Portfólio → P2 → semana ativa. O QR aponta para o mesmo estado exibido nesta face.</p>
+            <div class="qr-code">desk-os.app/q/demo-p2-dashboard</div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <div class="legend">
+        <span><i class="dot done"></i> concluído</span>
+        <span><i class="dot active"></i> em andamento</span>
+        <span><i class="dot blocked"></i> bloqueado</span>
+      </div>
+      <div>
+        <strong>FACE 01</strong> · snapshot 14/07/2026 · layout A4-LANDSCAPE-2F-V1
+      </div>
+    </footer>
+  </div>
+  <div class="print-note">IMPRIMIR EM 100% · SEM AJUSTE · A4 PAISAGEM</div>
+</section>
+
+<section class="sheet" id="face2">
+  <div class="face">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div>
+          <div class="brand-name">deskloop · fractal</div>
+          <div class="brand-tag">dashboard físico · foco e execução</div>
+        </div>
+      </div>
+      <div class="face-meta">
+        FACE 02 · EXECUÇÃO<br>
+        <b>DIA / 3 AÇÕES / 1 LINK</b>
+      </div>
+    </header>
+
+    <nav class="trail" aria-label="Trilha fractal">
+      <span class="crumb">P2 · Clean Sea</span>
+      <span class="sep">/</span>
+      <span class="crumb">semana 29</span>
+      <span class="sep">/</span>
+      <span class="crumb current">QUA · desenhar TO-BE</span>
+    </nav>
+
+    <div class="execution-grid">
+      <div class="execution-main">
+        <section class="card now">
+          <div>
+            <div class="now-label">bloco ativo · planejamento / desenho</div>
+            <h1>Desenhar o fluxo futuro da operação</h1>
+            <p>Transformar as dores encontradas em um fluxo simples, rastreável e testável.</p>
+          </div>
+          <div class="day-badge">
+            <b>QUA</b>
+            <span>15 JUL · DIA 03</span>
+          </div>
+        </section>
+
+        <section class="card next-action">
+          <div class="next-index">02</div>
+          <div class="next-copy">
+            <b>Próxima ação: definir status, responsáveis e regras de passagem</b>
+            <span>Foque somente nesta ação até produzir uma versão verificável.</span>
+          </div>
+          <div class="next-state">agora</div>
+        </section>
+
+        <div>
+          <section class="task-grid">
+            <article class="task">
+              <div>
+                <div class="task-top">
+                  <span class="task-num">AÇÃO 01</span>
+                  <span class="task-tag">concluída</span>
+                </div>
+                <h2>Definir os campos padrão</h2>
+                <p>Listar os dados mínimos necessários na entrada, operação e fechamento.</p>
+              </div>
+              <div class="checkline"><span class="box" style="background:var(--accent);border-color:var(--accent)"></span> evidência salva</div>
+            </article>
+
+            <article class="task current">
+              <div>
+                <div class="task-top">
+                  <span class="task-num">AÇÃO 02</span>
+                  <span class="task-tag">em andamento</span>
+                </div>
+                <h2>Definir status e papéis</h2>
+                <p>Nomear estados do fluxo, responsável por cada etapa e condição de passagem.</p>
+              </div>
+              <div class="checkline"><span class="box"></span> marcar quando verificável</div>
+            </article>
+
+            <article class="task">
+              <div>
+                <div class="task-top">
+                  <span class="task-num">AÇÃO 03</span>
+                  <span class="task-tag">próxima</span>
+                </div>
+                <h2>Definir regras automáticas</h2>
+                <p>Registrar quais eventos atualizam status, criam alertas ou encaminham dados.</p>
+              </div>
+              <div class="checkline"><span class="box"></span> ainda não iniciada</div>
+            </article>
+          </section>
+
+          <section class="card link-card" style="margin-top:3mm">
+            <div class="link-icon">↗</div>
+            <div>
+              <b>LINK · entregável-síntese do dia</b>
+              <span>Fluxo TO-BE visual com campos, estados, responsáveis e automações essenciais.</span>
+            </div>
+            <div class="link-status">1 de 3</div>
+          </section>
+        </div>
+      </div>
+
+      <aside class="execution-side">
+        <section class="card qr-card">
+          <div class="qr-box">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXIAAAFyAQAAAADAX2ykAAACiElEQVR4nO3bX4rbMBDH8e9UhjzKsAfoUewb9EihN7OPkgMsWI8BmV8fZDtOSssudbxxGT2E/Pk8DBiNRhrFxGdG/+1THNy7d+/evXv3f/I2jQqzejRIFfPL/Fu7YzzuN/aNJGkA6XISxAzEqwFBkqR7/+x43G/s0zJDGY2+BrMarAXMrNo7HvfP8dYCNBcz6VKh7ovjcb+5D6Kvp3fWfn087v/Bz4k3CkgAjCYIGeLVRIL1Ecirxe/+Q743M7MagCA7D2BtOslaxlI+7xuP+408uh8QM9IALKXzanSvFr/7j3hrAWuTGaST6Ougsj9aJra1O8bjfivPanPbKANRkpRRR5A0hOVXn79H9eqiRG8V0qVabXitjbk82l3jcb+1TxVSmb8ZdTEDjAbJjL4evb46pl/l5ykhL0VWF6VVuvb66ri+HFM1utpjf6G5zI2Hdsd43G/l1/UVhFWlJQ231kKQ11dH9qV/pAzNAOpSxXzcMZqkq6+/x/Tz+cZw+ybo1lVQFzO+/h7dm33P87McmHfCBME8k63dMR73W/myzxWMWHOpgJgxAPUtUDoN6STbJx732/q5f5TeZMRcQXrLEN+r8kAbwXyTY4943D/Dm9Wgn1Yxn2UEqYvX+e5VHfz86pj+9/4Rt+2w9PDi9dXRfMnPc/YNU2puNFb09fuUrnsLead43D/FP96fTMvVq9Jf8PX3oH46v2oGoBnCdODc3W2Cp56/5+f/wEsXM4hXs/Oy6mpYbtq9evzu70f1+EX/QxhU5Vad+nqAvt0tHvfP8SUrA80wWll1+xrsvHzcNx732/hp/valfgpzJT31BzOkGiMul2RfLX73fx/m/+927969e/fud/e/AJo/mB3BcSD3AAAAAElFTkSuQmCC" alt="QR da ação atual">
+          </div>
+          <div class="qr-copy">
+            <b>Registrar no app</b>
+            <p>Abre diretamente este bloco para concluir a ação, anexar evidência ou reconfigurar.</p>
+            <div class="qr-code">desk-os.app/q/demo-p2-day-02</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-label">close day · registrar antes de encerrar</div>
+          <div class="form-lines">
+            <div class="line-field">
+              <label>o que foi entregue?</label>
+              <div class="line"></div>
+            </div>
+            <div class="line-field">
+              <label>o que travou?</label>
+              <div class="line"></div>
+            </div>
+            <div class="line-field">
+              <label>o que vira a próxima ação?</label>
+              <div class="line"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-label">recycle · decisão de continuidade</div>
+          <div class="recycle-options">
+            <div class="option"><span class="box"></span> Continuar</div>
+            <div class="option"><span class="box"></span> Reduzir</div>
+            <div class="option"><span class="box"></span> Dividir</div>
+            <div class="option"><span class="box"></span> Reconfigurar</div>
+          </div>
+
+          <div class="card blocker" style="margin-top:4mm">
+            <div class="card-label">bloqueio atual</div>
+            <p>Validar com a operação quem pode alterar o status “pronto para fechamento”.</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <div class="legend">
+        <span><i class="dot done"></i> salvo</span>
+        <span><i class="dot active"></i> foco atual</span>
+        <span><i class="dot blocked"></i> impedimento</span>
+      </div>
+      <div>
+        <strong>FACE 02</strong> · 3 ações = 1 entregável · checksum DEMO-P2-W29
+      </div>
+    </footer>
+  </div>
+  <div class="print-note">IMPRIMIR EM 100% · SEM AJUSTE · A4 PAISAGEM</div>
+</section>
+
+</main>
+</body>
+</html>

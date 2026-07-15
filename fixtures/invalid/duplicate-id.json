@@ -1,0 +1,7 @@
+{
+  "description": "Deve falhar por ID duplicado",
+  "ids": [
+    "X",
+    "X"
+  ]
+}

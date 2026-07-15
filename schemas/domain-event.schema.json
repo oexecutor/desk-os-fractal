@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://desk-os.app/schemas/domain-event.schema.json",
+  "title": "DomainEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "event_type",
+    "workspace_id",
+    "stream_id",
+    "stream_version",
+    "occurred_at",
+    "actor",
+    "data",
+    "correlation_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "event_type": {
+      "enum": [
+        "plan.generated",
+        "plan.review_started",
+        "plan.approved",
+        "plan.activated",
+        "node.focused",
+        "action.started",
+        "action.completed",
+        "action.reopened",
+        "action.blocked",
+        "action.unblocked",
+        "evidence.added",
+        "synthesis.completed",
+        "day.closed",
+        "recycle.decided",
+        "plan.reconfiguration_requested",
+        "qr.command_resolved",
+        "qr.command_executed",
+        "print.snapshot_created"
+      ]
+    },
+    "workspace_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "stream_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "stream_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "USER",
+            "SYSTEM",
+            "QR"
+          ]
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "correlation_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "causation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "idempotency_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

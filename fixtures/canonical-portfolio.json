@@ -1,0 +1,222 @@
+{
+  "schema_version": "1.0.0",
+  "id": "01J2DESKOSPLANPORTFOLIO0001",
+  "workspace_id": "01J2DESKOSWORKSPACE000001",
+  "version": 1,
+  "lifecycle_state": "ACTIVE",
+  "input_kind": "portfolio",
+  "objective": "Digitalizar a operação de forma simples e rastreável.",
+  "dominant_result": "Concluir o projeto ativo sem perder a visão dos próximos projetos.",
+  "root_node_ids": [
+    "01J2DESKOSPORTFOLIOROOT001"
+  ],
+  "nodes": [
+    {
+      "schema_version": "1.0.0",
+      "workspace_id": "01J2DESKOSWORKSPACE000001",
+      "plan_version_id": "01J2DESKOSPLANPORTFOLIO0001",
+      "project_id": null,
+      "description": "",
+      "status": "READY",
+      "done_criteria": [],
+      "owner": null,
+      "schedule": null,
+      "dependencies": [],
+      "risk": null,
+      "source_refs": [
+        {
+          "source_artifact_id": "01J2DESKOSSOURCEARTIFACT01",
+          "locator": "section:demo",
+          "classification": "FACT"
+        }
+      ],
+      "metadata": {},
+      "id": "01J2DESKOSPORTFOLIOROOT001",
+      "parent_id": null,
+      "node_type": "portfolio",
+      "title": "Portfólio Jul–Ago 2026",
+      "order": 0,
+      "depth": 0,
+      "completion_rule": {
+        "kind": "ALL_CHILDREN",
+        "minimum_complete": null,
+        "requires_evidence": false
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "workspace_id": "01J2DESKOSWORKSPACE000001",
+      "plan_version_id": "01J2DESKOSPLANPORTFOLIO0001",
+      "project_id": "01J2DESKOSPORTPROJECT000000",
+      "description": "",
+      "status": "TODO",
+      "done_criteria": [],
+      "owner": null,
+      "schedule": null,
+      "dependencies": [],
+      "risk": null,
+      "source_refs": [
+        {
+          "source_artifact_id": "01J2DESKOSSOURCEARTIFACT01",
+          "locator": "section:demo",
+          "classification": "FACT"
+        }
+      ],
+      "metadata": {},
+      "id": "01J2DESKOSPORTPROJECT000000",
+      "parent_id": "01J2DESKOSPORTFOLIOROOT001",
+      "node_type": "project",
+      "title": "Iniciação científica",
+      "order": 0,
+      "depth": 1,
+      "completion_rule": {
+        "kind": "ALL_CHILDREN",
+        "minimum_complete": null,
+        "requires_evidence": false
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "workspace_id": "01J2DESKOSWORKSPACE000001",
+      "plan_version_id": "01J2DESKOSPLANPORTFOLIO0001",
+      "project_id": "01J2DESKOSPORTPROJECT000001",
+      "description": "",
+      "status": "IN_PROGRESS",
+      "done_criteria": [],
+      "owner": null,
+      "schedule": null,
+      "dependencies": [],
+      "risk": null,
+      "source_refs": [
+        {
+          "source_artifact_id": "01J2DESKOSSOURCEARTIFACT01",
+          "locator": "section:demo",
+          "classification": "FACT"
+        }
+      ],
+      "metadata": {},
+      "id": "01J2DESKOSPORTPROJECT000001",
+      "parent_id": "01J2DESKOSPORTFOLIOROOT001",
+      "node_type": "project",
+      "title": "Digitalização da operação",
+      "order": 1,
+      "depth": 1,
+      "completion_rule": {
+        "kind": "ALL_CHILDREN",
+        "minimum_complete": null,
+        "requires_evidence": false
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "workspace_id": "01J2DESKOSWORKSPACE000001",
+      "plan_version_id": "01J2DESKOSPLANPORTFOLIO0001",
+      "project_id": "01J2DESKOSPORTPROJECT000002",
+      "description": "",
+      "status": "TODO",
+      "done_criteria": [],
+      "owner": null,
+      "schedule": null,
+      "dependencies": [],
+      "risk": null,
+      "source_refs": [
+        {
+          "source_artifact_id": "01J2DESKOSSOURCEARTIFACT01",
+          "locator": "section:demo",
+          "classification": "FACT"
+        }
+      ],
+      "metadata": {},
+      "id": "01J2DESKOSPORTPROJECT000002",
+      "parent_id": "01J2DESKOSPORTFOLIOROOT001",
+      "node_type": "project",
+      "title": "Cidadania portuguesa",
+      "order": 2,
+      "depth": 1,
+      "completion_rule": {
+        "kind": "ALL_CHILDREN",
+        "minimum_complete": null,
+        "requires_evidence": false
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "workspace_id": "01J2DESKOSWORKSPACE000001",
+      "plan_version_id": "01J2DESKOSPLANPORTFOLIO0001",
+      "project_id": "01J2DESKOSPORTPROJECT000003",
+      "description": "",
+      "status": "TODO",
+      "done_criteria": [],
+      "owner": null,
+      "schedule": null,
+      "dependencies": [],
+      "risk": null,
+      "source_refs": [
+        {
+          "source_artifact_id": "01J2DESKOSSOURCEARTIFACT01",
+          "locator": "section:demo",
+          "classification": "FACT"
+        }
+      ],
+      "metadata": {},
+      "id": "01J2DESKOSPORTPROJECT000003",
+      "parent_id": "01J2DESKOSPORTFOLIOROOT001",
+      "node_type": "project",
+      "title": "Conteúdo profissional",
+      "order": 3,
+      "depth": 1,
+      "completion_rule": {
+        "kind": "ALL_CHILDREN",
+        "minimum_complete": null,
+        "requires_evidence": false
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "workspace_id": "01J2DESKOSWORKSPACE000001",
+      "plan_version_id": "01J2DESKOSPLANPORTFOLIO0001",
+      "project_id": "01J2DESKOSPORTPROJECT000004",
+      "description": "",
+      "status": "TODO",
+      "done_criteria": [],
+      "owner": null,
+      "schedule": null,
+      "dependencies": [],
+      "risk": null,
+      "source_refs": [
+        {
+          "source_artifact_id": "01J2DESKOSSOURCEARTIFACT01",
+          "locator": "section:demo",
+          "classification": "FACT"
+        }
+      ],
+      "metadata": {},
+      "id": "01J2DESKOSPORTPROJECT000004",
+      "parent_id": "01J2DESKOSPORTFOLIOROOT001",
+      "node_type": "project",
+      "title": "Negócio próprio",
+      "order": 4,
+      "depth": 1,
+      "completion_rule": {
+        "kind": "ALL_CHILDREN",
+        "minimum_complete": null,
+        "requires_evidence": false
+      }
+    }
+  ],
+  "validation_report": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "gaps": [
+      "Confirmar quem pode alterar o status de fechamento."
+    ]
+  },
+  "source_artifact_ids": [
+    "01J2DESKOSSOURCEARTIFACT01"
+  ],
+  "created_at": "2026-07-14T15:00:00Z",
+  "created_by": "demo-user",
+  "approved_at": "2026-07-14T15:10:00Z",
+  "approved_by": "demo-user"
+}

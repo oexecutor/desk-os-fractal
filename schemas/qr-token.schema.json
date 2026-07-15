@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://desk-os.app/schemas/qr-token.schema.json",
+  "title": "QrTokenRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "token_hash",
+    "workspace_id",
+    "kind",
+    "target",
+    "created_at",
+    "revoked",
+    "authentication_policy"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.1.0" },
+    "id": { "type": "string", "minLength": 16 },
+    "token_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "workspace_id": { "type": "string", "minLength": 16 },
+    "kind": {
+      "enum": [
+        "VIEW_CONTEXT",
+        "OPEN_FOCUS",
+        "OPEN_CURRENT_ACTION",
+        "COMPLETE_ACTION",
+        "CLOSE_DAY",
+        "RECYCLE"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy"],
+      "properties": {
+        "strategy": {
+          "enum": [
+            "FIXED_NODE",
+            "CURRENT_CONTEXT",
+            "ACTIVE_BLOCK",
+            "CURRENT_ACTION",
+            "TODAY_ACTION",
+            "NEAREST_GATE"
+          ]
+        },
+        "project_id": { "type": ["string", "null"] },
+        "sprint_id": { "type": ["string", "null"] },
+        "node_id": { "type": ["string", "null"] },
+        "plan_version_id": { "type": ["string", "null"] }
+      }
+    },
+    "minimum_plan_state": { "enum": ["IN_REVIEW", "APPROVED", "ACTIVE"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": ["string", "null"], "format": "date-time" },
+    "revoked": { "type": "boolean" },
+    "max_uses": { "type": ["integer", "null"], "minimum": 1 },
+    "use_count": { "type": "integer", "minimum": 0, "default": 0 },
+    "authentication_policy": { "enum": ["REQUIRED", "OPTIONAL_VIEW_ONLY", "PUBLIC_VIEW"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "OPEN_CURRENT_ACTION" } }, "required": ["kind"] },
+      "then": {
+        "properties": {
+          "target": {
+            "properties": { "strategy": { "const": "CURRENT_ACTION" } },
+            "required": ["strategy", "sprint_id", "plan_version_id"]
+          },
+          "minimum_plan_state": { "const": "ACTIVE" }
+        },
+        "required": ["minimum_plan_state"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://desk-os.app/schemas/decomposition-result.schema.json",
+  "title": "DecompositionResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "classification",
+    "plan",
+    "analysis_records"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "classification": {
+      "$ref": "classification-result.schema.json"
+    },
+    "plan": {
+      "$ref": "plan-version.schema.json"
+    },
+    "analysis_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "classification",
+          "statement",
+          "source_refs"
+        ],
+        "properties": {
+          "classification": {
+            "enum": [
+              "FACT",
+              "EVIDENCE",
+              "INFERENCE",
+              "HYPOTHESIS",
+              "COUNTEREVIDENCE",
+              "GAP"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

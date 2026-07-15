@@ -1,0 +1,28 @@
+{
+  "name": "@desk-os/functions",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Netlify Functions (modern API) adapters over the DESK-OS domain packages.",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@desk-os/domain": "workspace:*",
+    "@desk-os/schemas": "workspace:*",
+    "@desk-os/ingestion": "workspace:*",
+    "@desk-os/agents": "workspace:*",
+    "@desk-os/decomposition": "workspace:*",
+    "@desk-os/approval": "workspace:*",
+    "@desk-os/events": "workspace:*",
+    "@desk-os/storage": "workspace:*",
+    "@desk-os/qr": "workspace:*",
+    "@desk-os/print": "workspace:*"
+  },
+  "devDependencies": {
+    "@netlify/functions": "5.3.0",
+    "typescript": "6.0.3",
+    "@types/node": "22.20.1"
+  }
+}

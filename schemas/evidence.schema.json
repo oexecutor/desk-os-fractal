@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://desk-os.app/schemas/evidence.schema.json",
+  "title": "Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "workspace_id",
+    "node_id",
+    "kind",
+    "created_at",
+    "created_by"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "workspace_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "kind": {
+      "enum": [
+        "NOTE",
+        "URL",
+        "FILE_REFERENCE",
+        "CHECKSUM",
+        "EXTERNAL_ID"
+      ]
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 240
+    },
+    "value": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  }
+}

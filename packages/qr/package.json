@@ -1,0 +1,30 @@
+{
+  "name": "@desk-os/qr",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "QR token registry, opaque tokens, semantic resolvers including resolveCurrentAction.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@desk-os/domain": "workspace:*",
+    "@desk-os/schemas": "workspace:*",
+    "@desk-os/events": "workspace:*",
+    "@desk-os/storage": "workspace:*",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/node": "22.20.1"
+  }
+}

@@ -1,0 +1,31 @@
+﻿epic,task_id,title,priority,phase,depends_on,acceptance
+E0,T001,Bootstrap monorepo e lockfile,MUST,Fase 0,,lint/typecheck/test em CI
+E0,T002,Validar todos os JSON Schemas,MUST,Fase 0,T001,fixtures válidas e inválidas
+E1,T010,Implementar branded IDs e geração estável,MUST,Fase 1,T001,sem IDs por índice/data
+E1,T011,Implementar invariantes de grafo,MUST,Fase 1,"T002,T010","detecta ciclo, órfão, ordem duplicada"
+E1,T012,Implementar lifecycle do plano,MUST,Fase 1,T011,transições válidas testadas
+E1,T013,Implementar command/event/projector,MUST,Fase 1,T012,snapshot reconstruível
+E1,T014,Implementar expected_version e idempotência,MUST,Fase 1,T013,409 e replay testados
+E2,T020,Criar upload e SourceArtifact,MUST,Fase 2,T002,checksum e MIME real
+E2,T021,Extratores texto/MD/JSON,MUST,Fase 2,T020,localizadores preservados
+E2,T022,Extratores PDF/DOCX textual,MUST,Fase 2,T020,sem macros/scripts
+E2,T023,Tela de revisão e consentimento,MUST,Fase 2,"T021,T022",usuário confirma antes do LLM
+E3,T030,StructuredModelClient e fake,MUST,Fase 3,T002,testes sem API externa
+E3,T031,Classifier e context extractor,MUST,Fase 3,"T030,T023",fatos/lacunas rastreáveis
+E3,T032,Decomposer e critic,MUST,Fase 3,T031,árvore schema-valid
+E4,T040,Plan review UI,MUST,Fase 4,"T032,T012",corrigir/aprovar/rejeitar
+E4,T041,Ativação transacional,MUST,Fase 4,"T040,T014",uma versão ativa
+E5,T050,FractalRoot e breadcrumb,MUST,Fase 4,T041,projeto e portfólio
+E5,T051,NodeCollection cardinalidade dinâmica,MUST,Fase 4,T050,1..N sem hardcode
+E5,T052,FocusView e próxima ação,MUST,Fase 5,"T051,T013",ordem determinística
+E6,T060,Fechamento e Recycle,MUST,Fase 5,T052,eventos e proposta de nova versão
+E7,T070,Print composer Face 1,MUST,Fase 6,"T041,T013",seleção determinística
+E7,T071,Print composer Face 2,MUST,Fase 6,T052,3 ações + LINK
+E7,T072,Renderer A4 e content budget,MUST,Fase 6,"T070,T071",2 páginas sem overflow
+E8,T080,QR registry/token opaco,MUST,Fase 7,T014,token revogável
+E8,T081,Resolvers específicos,MUST,Fase 7,T080,today != gate
+E8,T082,Resolve/confirm/execute,MUST,Fase 7,"T081,T014",GET não muta
+E8,T083,Scanner e deep link,MUST,Fase 7,T082,câmera e entrada manual
+E9,T090,Registrar service worker,SHOULD,Fase 8,T050,PWA instala
+E9,T091,Cache snapshot e sync,SHOULD,Fase 8,"T090,T013",offline read-first
+E10,T100,Capacitor shell,COULD,Fase 9,"T091,T083",Android/iOS smoke

@@ -1,0 +1,114 @@
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+a { color: var(--color-accent); }
+
+.desk-os-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 10px 16px;
+  z-index: 100;
+}
+.desk-os-skip-link:focus {
+  left: 8px;
+  top: 8px;
+}
+
+button {
+  font: inherit;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  padding: 8px 14px;
+  cursor: pointer;
+}
+button:hover { background: var(--color-accent-soft); }
+button:focus-visible, a:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+.desk-os-app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  flex-wrap: wrap;
+}
+.desk-os-app-header a { color: var(--color-paper); text-decoration: none; margin-right: 12px; }
+.desk-os-app-brand { font-weight: 700; }
+
+#main-content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.desk-os-node-collection--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.desk-os-node-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 14px;
+  min-height: 90px;
+}
+.desk-os-node-card-status { font: 12px var(--font-mono); color: var(--color-ink-soft); text-transform: uppercase; }
+
+.desk-os-focus-actions { display: grid; gap: 12px; margin: 16px 0; }
+.desk-os-action-card { border: 1px solid var(--color-line-strong); border-radius: var(--radius-sm); padding: 14px; }
+.desk-os-action-card--current { border-color: var(--color-accent); box-shadow: inset 0 2px 0 var(--color-accent); }
+
+.desk-os-synthesis-card { border: 1px solid var(--color-link); background: var(--color-link-soft); border-radius: var(--radius-sm); padding: 14px; }
+.desk-os-synthesis-card-label { font: 12px var(--font-mono); color: var(--color-link); }
+
+.desk-os-approval-banner { border: 1px solid var(--color-line-strong); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 16px; }
+.desk-os-lifecycle-blocked { border-color: var(--color-blocked); background: var(--color-blocked-soft); }
+.desk-os-lifecycle-active { border-color: var(--color-accent); background: var(--color-accent-soft); }
+
+.desk-os-form-field { display: grid; gap: 4px; margin-bottom: 16px; min-width: 0; }
+.desk-os-form-field label { font-weight: 600; }
+.desk-os-form-field textarea, .desk-os-form-field input[type="file"] {
+  font: inherit;
+  padding: 10px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  max-width: 100%;
+}
+
+.desk-os-qr-dialog {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  background: rgba(20, 20, 15, .5);
+  padding: 20px;
+  text-align: center;
+}
+.desk-os-qr-dialog-actions { display: flex; gap: 8px; justify-content: center; }

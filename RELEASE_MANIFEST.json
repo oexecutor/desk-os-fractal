@@ -1,0 +1,15 @@
+{
+  "package": "desk-os-netlify-release",
+  "version": "1.1.0",
+  "generated_at": "2026-07-15T00:56:07.003Z",
+  "git_commit": "558027b0032634ae86af2a36d94aa4eca927f3bc",
+  "toolchain": {
+    "node": "v22.22.2",
+    "pnpm": "11.13.0",
+    "typescript": "Version 6.0.3"
+  },
+  "source_file_count": 383,
+  "source_total_bytes": 2534095,
+  "checksums_manifest": "CHECKSUMS.sha256",
+  "note": "SHA-256 do próprio .zip é circular e por isso fica fora do ZIP, em release/<nome>.zip.sha256."
+}

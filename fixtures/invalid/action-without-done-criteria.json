@@ -1,0 +1,5 @@
+{
+  "description": "Deve falhar schema/invariante",
+  "node_type": "action",
+  "done_criteria": []
+}

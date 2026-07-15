@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.1.0",
+  "id": "01J2DESKOSPRINTWEEKLY00001",
+  "workspace_id": "01J2DESKOSWORKSPACE000001",
+  "plan_version_id": "01J2DESKOSPLANVERSION00001",
+  "sprint_id": "01J2DESKOSSPRINT2026W290001",
+  "state_version_at_emission": 0,
+  "created_at": "2026-07-13T08:00:00Z",
+  "checksum": "A29-02-6F4A-2026",
+  "format": "A4_PORTRAIT_FOLDED_WEEKLY_V2",
+  "layout": {
+    "sheet": "A4_PORTRAIT_210X297_MM",
+    "zones_mm": {
+      "top_mechanical": 40,
+      "face1": 100,
+      "middle_mechanical": 40,
+      "face2": 100,
+      "bottom_mechanical": 17
+    },
+    "face2_rotation_deg": 180,
+    "print_sides": "SINGLE_SIDED",
+    "scale_percent": 100,
+    "safe_margin_mm": 5
+  },
+  "face1": {
+    "user_label": "João",
+    "context_trail": ["Portfólio", "P2 Clean Sea", "Semana 29"],
+    "week_label": "SPRINT 2026-W29",
+    "date_range": "13–17 JUL 2026",
+    "dominant_result": "Desenhar e validar o fluxo digital da operação Clean Sea",
+    "definition_of_done": "Piloto configurado, testado em operação real e com plano de escala registrado.",
+    "weekly_contract": { "blocks": 5, "actions": 15, "syntheses": 5 },
+    "blocks": [
+      { "day_label": "SEG", "title": "Mapear AS-IS", "synthesis_title": "Mapa do processo atual" },
+      { "day_label": "TER", "title": "Diagnosticar dores", "synthesis_title": "Diagnóstico priorizado" },
+      { "day_label": "QUA", "title": "Desenhar TO-BE", "synthesis_title": "Fluxo futuro validável" },
+      { "day_label": "QUI", "title": "Configurar piloto", "synthesis_title": "Piloto operacional" },
+      { "day_label": "SEX", "title": "Testar e medir", "synthesis_title": "Aprendizado e decisão" }
+    ],
+    "known_risks": ["Confirmar quem pode alterar o estado pronto para fechamento."],
+    "qr_token_id": "01J2DESKOSQRCURRENTACTION01"
+  },
+  "face2": {
+    "project_label": "P2 · Digitalização Clean Sea",
+    "week_label": "SPRINT 2026-W29",
+    "days": [
+      {
+        "day_label": "SEG",
+        "block_title": "Mapear AS-IS",
+        "method_tag": "INICIAÇÃO",
+        "actions": [
+          { "id": "01J2ACTIONSEG000000000001", "title": "Entrada da demanda", "done_criteria": "Entrada documentada." },
+          { "id": "01J2ACTIONSEG000000000002", "title": "Coleta em campo", "done_criteria": "Coleta descrita." },
+          { "id": "01J2ACTIONSEG000000000003", "title": "Fechamento atual", "done_criteria": "Fechamento mapeado." }
+        ],
+        "synthesis": { "id": "01J2SYNTHSEG0000000000001", "title": "Mapa do processo atual", "completion_rule": "ALL_THREE_ACTIONS_DONE" }
+      },
+      {
+        "day_label": "TER",
+        "block_title": "Diagnosticar dores",
+        "method_tag": "PLANEJAMENTO",
+        "actions": [
+          { "id": "01J2ACTIONTER000000000001", "title": "Retrabalho", "done_criteria": "Retrabalho evidenciado." },
+          { "id": "01J2ACTIONTER000000000002", "title": "Atrasos", "done_criteria": "Atrasos identificados." },
+          { "id": "01J2ACTIONTER000000000003", "title": "Perdas de dados", "done_criteria": "Perdas registradas." }
+        ],
+        "synthesis": { "id": "01J2SYNTHTER0000000000001", "title": "Diagnóstico priorizado", "completion_rule": "ALL_THREE_ACTIONS_DONE" }
+      },
+      {
+        "day_label": "QUA",
+        "block_title": "Desenhar TO-BE",
+        "method_tag": "DESENHO",
+        "actions": [
+          { "id": "01J2ACTIONQUA000000000001", "title": "Campos padrão", "done_criteria": "Campos mínimos definidos." },
+          { "id": "01J2ACTIONQUA000000000002", "title": "Status e papéis", "done_criteria": "Estados e responsáveis definidos." },
+          { "id": "01J2ACTIONQUA000000000003", "title": "Regras automáticas", "done_criteria": "Regras registradas." }
+        ],
+        "synthesis": { "id": "01J2SYNTHQUA0000000000001", "title": "Fluxo futuro validável", "completion_rule": "ALL_THREE_ACTIONS_DONE" }
+      },
+      {
+        "day_label": "QUI",
+        "block_title": "Configurar piloto",
+        "method_tag": "EXECUÇÃO",
+        "actions": [
+          { "id": "01J2ACTIONQUI000000000001", "title": "Formulário", "done_criteria": "Formulário funcional." },
+          { "id": "01J2ACTIONQUI000000000002", "title": "Base central", "done_criteria": "Base criada." },
+          { "id": "01J2ACTIONQUI000000000003", "title": "Automação", "done_criteria": "Automação testada." }
+        ],
+        "synthesis": { "id": "01J2SYNTHQUI0000000000001", "title": "Piloto operacional", "completion_rule": "ALL_THREE_ACTIONS_DONE" }
+      },
+      {
+        "day_label": "SEX",
+        "block_title": "Testar e medir",
+        "method_tag": "ENCERRAMENTO",
+        "actions": [
+          { "id": "01J2ACTIONSEX000000000001", "title": "Operação real", "done_criteria": "Teste realizado." },
+          { "id": "01J2ACTIONSEX000000000002", "title": "Comparar tempo", "done_criteria": "Comparação registrada." },
+          { "id": "01J2ACTIONSEX000000000003", "title": "Plano de escala", "done_criteria": "Decisão de escala documentada." }
+        ],
+        "synthesis": { "id": "01J2SYNTHSEX0000000000001", "title": "Aprendizado e decisão", "completion_rule": "ALL_THREE_ACTIONS_DONE" }
+      }
+    ],
+    "recycle_options": ["CONTINUE", "REDUCE", "SPLIT", "RECONFIGURE"],
+    "closeout_fields": ["MAIN_DELIVERY", "BLOCKER", "NEXT_ACTION"],
+    "qr_token_id": "01J2DESKOSQRCURRENTACTION01"
+  }
+}

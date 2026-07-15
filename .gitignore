@@ -1,92 +1,18 @@
-# Dependencies
 node_modules/
-.pnpm-store/
-.npm/
-
-# Build and test
 dist/
 build/
-out/
-.netlify/
-.vite/
 coverage/
-playwright-report/
+.playwright/
 test-results/
-*.tsbuildinfo
-.cache/
-.turbo/
-
-# Environment and secrets
 .env
 .env.*
 !.env.example
-*.pem
-*.key
-*.p12
-*.pfx
-secrets/
-credentials/
-
-# Local storage and databases
-*.db
-*.sqlite
-*.sqlite3
-data/
-storage/
-.local-data/
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-pnpm-debug.log*
-
-# Editors
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.example.json
-.idea/
-*.swp
-*.swo
-*~
-
-# Operating systems
 .DS_Store
-._*
-Thumbs.db
-Desktop.ini
-__MACOSX/
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.bak
-*.orig
-
-# Releases and archives
+*.log
+.netlify/
+.capacitor/
+android/.gradle/
+android/app/build/
+ios/App/Pods/
 release/*.zip
-*.tar
-*.tar.gz
-*.tgz
-
-# Claude / local AI work
-.claude/settings.local.json
-.claude/**/*.local.*
-.ai-work/
-agent-output/
-scratchpad/
-
-# Private and client material
-uploads/
-private/
-client-data/
-fixtures/private/
-
-# Mobile
-apps/mobile/android/.gradle/
-apps/mobile/android/local.properties
-apps/mobile/android/**/build/
-apps/mobile/ios/Pods/
-apps/mobile/ios/DerivedData/
-apps/mobile/**/*.xcuserstate
+*.tsbuildinfo

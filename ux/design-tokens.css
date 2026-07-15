@@ -1,0 +1,19 @@
+:root {
+  --color-bg: #f7f6f3;
+  --color-paper: #fffefb;
+  --color-surface: #ffffff;
+  --color-ink: #14140f;
+  --color-ink-soft: #5c5b52;
+  --color-ink-faint: #77756c;
+  --color-line: #e3e1d8;
+  --color-line-strong: #c9c6b9;
+  --color-accent: #1f4b3f;
+  --color-accent-soft: #dce8e2;
+  --color-link: #b3792c;
+  --color-link-soft: #f3e6d2;
+  --color-blocked: #a8492f;
+  --color-blocked-soft: #f2dcd3;
+  --radius-sm: 3px;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, Menlo, monospace;
+}

@@ -1,0 +1,302 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://desk-os.app/schemas/work-node.schema.json",
+  "title": "WorkNode",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "workspace_id",
+    "plan_version_id",
+    "parent_id",
+    "node_type",
+    "title",
+    "order",
+    "depth",
+    "status",
+    "completion_rule",
+    "source_refs",
+    "metadata"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "workspace_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "plan_version_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "parent_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "node_type": {
+      "enum": [
+        "portfolio",
+        "project",
+        "phase",
+        "workflow",
+        "week",
+        "day",
+        "block",
+        "deliverable",
+        "action",
+        "synthesis"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000,
+      "default": ""
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "depth": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 32
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "READY",
+        "TODO",
+        "IN_PROGRESS",
+        "BLOCKED",
+        "DONE",
+        "CANCELLED",
+        "ARCHIVED"
+      ]
+    },
+    "completion_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "NONE",
+            "MANUAL",
+            "ALL_CHILDREN",
+            "THRESHOLD"
+          ]
+        },
+        "minimum_complete": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "requires_evidence": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "done_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "default": []
+    },
+    "owner": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "schedule": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "start_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "end_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "week_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-W\\d{2}$"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 16
+      },
+      "default": []
+    },
+    "risk": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_artifact_id",
+          "locator",
+          "classification"
+        ],
+        "properties": {
+          "source_artifact_id": {
+            "type": "string",
+            "minLength": 16
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "classification": {
+            "enum": [
+              "FACT",
+              "EVIDENCE",
+              "INFERENCE",
+              "HYPOTHESIS",
+              "COUNTEREVIDENCE",
+              "GAP"
+            ]
+          },
+          "excerpt": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "node_type": {
+            "const": "action"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "done_criteria": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "done_criteria"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "node_type": {
+            "const": "synthesis"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "completion_rule": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "ALL_CHILDREN",
+                  "THRESHOLD"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

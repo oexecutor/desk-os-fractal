@@ -1,0 +1,4 @@
+desk-os-claude-code-local-netlify-handoff
+version=1.1.0
+print_contract=CR-001
+execution_mode=local-only

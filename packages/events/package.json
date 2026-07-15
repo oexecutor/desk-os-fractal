@@ -1,0 +1,27 @@
+{
+  "name": "@desk-os/events",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Command/event/materialized-snapshot model: append-only stream, expected_version and idempotency.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@desk-os/domain": "workspace:*",
+    "@desk-os/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/node": "22.20.1"
+  }
+}

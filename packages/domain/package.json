@@ -1,0 +1,26 @@
+{
+  "name": "@desk-os/domain",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Canonical recursive domain model, IDs, invariants and plan lifecycle. No UI/HTTP/Netlify/filesystem/LLM dependency.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "ulid": "3.0.2"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/node": "22.20.1"
+  }
+}

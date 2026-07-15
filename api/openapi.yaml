@@ -1,0 +1,333 @@
+openapi: 3.1.0
+info:
+  title: DESK-OS / TAL de Fractal API
+  version: 1.0.0
+  description: API normativa para ingestão, planos, estado, impressão e QR.
+servers:
+  - url: https://example.desk-os.app/api
+    description: Placeholder; definir por ambiente.
+security:
+  - bearerAuth: []
+tags:
+  - name: Ingestions
+  - name: Plans
+  - name: State
+  - name: Print
+  - name: QR
+paths:
+  /ingestions:
+    post:
+      tags: [Ingestions]
+      summary: Criar ingestão por upload
+      operationId: createIngestion
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [workspace_id, files, consent_to_model_processing]
+              properties:
+                workspace_id: { type: string }
+                files:
+                  type: array
+                  minItems: 1
+                  items: { type: string, format: binary }
+                pasted_text: { type: string }
+                consent_to_model_processing: { type: boolean, const: true }
+      responses:
+        '202':
+          description: Ingestão criada
+          content:
+            application/json:
+              schema: { $ref: '../schemas/ingestion-job.schema.json' }
+        '413': { $ref: '#/components/responses/Error' }
+        '415': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /ingestions/{ingestionId}:
+    get:
+      tags: [Ingestions]
+      summary: Consultar andamento
+      parameters:
+        - $ref: '#/components/parameters/IngestionId'
+      responses:
+        '200':
+          description: Estado da ingestão
+          content:
+            application/json:
+              schema: { $ref: '../schemas/ingestion-job.schema.json' }
+        '404': { $ref: '#/components/responses/Error' }
+  /ingestions/{ingestionId}/decompose:
+    post:
+      tags: [Ingestions]
+      summary: Iniciar decomposição estruturada
+      parameters:
+        - $ref: '#/components/parameters/IngestionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [workspace_id]
+              properties:
+                workspace_id: { type: string }
+                user_context: { type: string, maxLength: 4000 }
+      responses:
+        '202':
+          description: Decomposição iniciada
+          content:
+            application/json:
+              schema: { $ref: '../schemas/ingestion-job.schema.json' }
+        '409': { $ref: '#/components/responses/Error' }
+  /plans/{planVersionId}:
+    get:
+      tags: [Plans]
+      summary: Obter versão de plano
+      parameters:
+        - $ref: '#/components/parameters/PlanVersionId'
+      responses:
+        '200':
+          description: Plano
+          content:
+            application/json:
+              schema: { $ref: '../schemas/plan-version.schema.json' }
+        '404': { $ref: '#/components/responses/Error' }
+  /plans/{planVersionId}/review:
+    post:
+      tags: [Plans]
+      summary: Colocar plano em revisão
+      parameters:
+        - $ref: '#/components/parameters/PlanVersionId'
+      responses:
+        '200': { description: Revisão iniciada }
+        '409': { $ref: '#/components/responses/Error' }
+  /plans/{planVersionId}/approve:
+    post:
+      tags: [Plans]
+      summary: Aprovar plano por humano
+      parameters:
+        - $ref: '#/components/parameters/PlanVersionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [expected_version, idempotency_key]
+              properties:
+                expected_version: { type: integer, minimum: 0 }
+                idempotency_key: { type: string }
+                note: { type: string }
+      responses:
+        '200': { description: Plano aprovado }
+        '409': { $ref: '#/components/responses/Error' }
+  /plans/{planVersionId}/activate:
+    post:
+      tags: [Plans]
+      summary: Ativar plano aprovado
+      parameters:
+        - $ref: '#/components/parameters/PlanVersionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [expected_version, idempotency_key]
+              properties:
+                expected_version: { type: integer, minimum: 0 }
+                idempotency_key: { type: string }
+      responses:
+        '200': { description: Plano ativo }
+        '409': { $ref: '#/components/responses/Error' }
+  /workspaces/{workspaceId}/tree:
+    get:
+      tags: [Plans]
+      summary: Obter árvore ativa e snapshot
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+      responses:
+        '200':
+          description: Árvore e estado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [plan, state]
+                properties:
+                  plan: { $ref: '../schemas/plan-version.schema.json' }
+                  state: { $ref: '../schemas/materialized-state.schema.json' }
+        '404': { $ref: '#/components/responses/Error' }
+  /commands:
+    post:
+      tags: [State]
+      summary: Executar comando de domínio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '../schemas/command.schema.json' }
+      responses:
+        '200':
+          description: Comando aplicado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [events, state]
+                properties:
+                  events:
+                    type: array
+                    items: { $ref: '../schemas/domain-event.schema.json' }
+                  state: { $ref: '../schemas/materialized-state.schema.json' }
+        '409': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /print-snapshots:
+    post:
+      tags: [Print]
+      summary: Criar snapshot físico imutável
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [workspace_id, context_node_id, state_version]
+              properties:
+                workspace_id: { type: string }
+                context_node_id: { type: string }
+                state_version: { type: integer, minimum: 0 }
+      responses:
+        '201':
+          description: Snapshot criado
+          content:
+            application/json:
+              schema: { $ref: '../schemas/print-snapshot.schema.json' }
+        '409': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /print-snapshots/{snapshotId}/html:
+    get:
+      tags: [Print]
+      summary: Renderizar HTML offline das duas faces
+      parameters:
+        - name: snapshotId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: HTML imprimível
+          content:
+            text/html:
+              schema: { type: string }
+        '404': { $ref: '#/components/responses/Error' }
+  /qr/tokens:
+    post:
+      tags: [QR]
+      summary: Criar token QR
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '../schemas/qr-token.schema.json' }
+      responses:
+        '201':
+          description: Token criado; retorna URL somente uma vez
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [record, url]
+                properties:
+                  record: { $ref: '../schemas/qr-token.schema.json' }
+                  url: { type: string, format: uri }
+  /qr/{token}/resolve:
+    post:
+      security: []
+      tags: [QR]
+      summary: Resolver token em contexto/comando seguro
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string, minLength: 20 }
+      responses:
+        '200':
+          description: Resolução
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [kind, description, mutates_state, confirmation_required]
+                properties:
+                  kind: { type: string }
+                  description: { type: string }
+                  mutates_state: { type: boolean }
+                  confirmation_required: { type: boolean }
+                  target: { type: object }
+        '410': { $ref: '#/components/responses/Error' }
+  /qr/{token}/execute:
+    post:
+      tags: [QR]
+      summary: Executar comando QR confirmado
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string, minLength: 20 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [confirmed, idempotency_key, expected_version]
+              properties:
+                confirmed: { type: boolean, const: true }
+                idempotency_key: { type: string }
+                expected_version: { type: integer, minimum: 0 }
+      responses:
+        '200': { description: Comando executado }
+        '409': { $ref: '#/components/responses/Error' }
+        '410': { $ref: '#/components/responses/Error' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    WorkspaceId:
+      name: workspaceId
+      in: path
+      required: true
+      schema: { type: string }
+    IngestionId:
+      name: ingestionId
+      in: path
+      required: true
+      schema: { type: string }
+    PlanVersionId:
+      name: planVersionId
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    Error:
+      description: Erro estruturado
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error:
+                type: object
+                required: [code, message, correlation_id, retryable]
+                properties:
+                  code: { type: string }
+                  message: { type: string }
+                  correlation_id: { type: string }
+                  retryable: { type: boolean }
+                  details: { type: array, items: {} }

@@ -1,0 +1,19 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/domain" },
+    { "path": "packages/schemas" },
+    { "path": "packages/events" },
+    { "path": "packages/storage" },
+    { "path": "packages/ingestion" },
+    { "path": "packages/agents" },
+    { "path": "packages/decomposition" },
+    { "path": "packages/approval" },
+    { "path": "packages/qr" },
+    { "path": "packages/print" },
+    { "path": "packages/ui" },
+    { "path": "packages/client-sdk" },
+    { "path": "apps/functions" },
+    { "path": "apps/web" }
+  ]
+}

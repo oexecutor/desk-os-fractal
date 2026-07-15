@@ -1,0 +1,9 @@
+Abra esta pasta no Claude Code e cole o conteúdo de:
+
+claude-code/MASTER_PROMPT.md
+
+O primeiro comando recomendado é:
+
+/project-audit
+
+Não peça ao Claude Code para “fazer tudo” em uma execução. Use os gates do roadmap.

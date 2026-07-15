@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://desk-os.app/schemas/command.schema.json",
+  "title": "DomainCommand",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "command_id",
+    "command_type",
+    "workspace_id",
+    "stream_id",
+    "expected_version",
+    "idempotency_key",
+    "actor",
+    "data"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "command_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "command_type": {
+      "enum": [
+        "START_ACTION",
+        "COMPLETE_ACTION",
+        "REOPEN_ACTION",
+        "BLOCK_ACTION",
+        "UNBLOCK_ACTION",
+        "ADD_EVIDENCE",
+        "CLOSE_DAY",
+        "DECIDE_RECYCLE",
+        "APPROVE_PLAN",
+        "ACTIVATE_PLAN",
+        "FOCUS_NODE"
+      ]
+    },
+    "workspace_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "stream_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "expected_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 200
+    },
+    "actor": {
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "USER",
+            "QR"
+          ]
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
