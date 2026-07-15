@@ -1,0 +1,21 @@
+{
+  "repository_name": "desk-os-fractal",
+  "visibility": "private",
+  "default_branch": "main",
+  "description": "DESK-OS / TAL de Fractal — sistema operacional de execução assistida por IA que transforma projetos e portfólios em planos fractais, sprints, dashboards físicos semanais e ações sincronizadas por QR semântico.",
+  "license": "Proprietary / All Rights Reserved",
+  "topics": [
+    "ai",
+    "project-management",
+    "neuroinclusive",
+    "productivity",
+    "pwa",
+    "typescript",
+    "react",
+    "netlify",
+    "qr-code",
+    "event-sourcing",
+    "fractal",
+    "physical-digital"
+  ]
+}

@@ -1,0 +1,75 @@
+DESK-OS / TAL de Fractal Proprietary License
+Version 1.0 — 2026
+
+Copyright © 2026 Leonardo Batista. All Rights Reserved.
+
+1. Ownership
+
+The software, source code, documentation, designs, schemas, prompts, workflows,
+physical artifact specifications, QR routing concepts, and related materials
+contained in this repository (the "Software") are proprietary works owned by
+Leonardo Batista, except for third-party components separately identified and
+licensed.
+
+2. No open-source grant
+
+This repository is not open source. Access to the Software does not transfer
+ownership or grant permission to copy, publish, distribute, sublicense, sell,
+commercialize, reverse engineer, or create derivative works.
+
+3. Authorized use
+
+The Software may be accessed, evaluated, modified, executed, or deployed only
+when expressly authorized in writing by the copyright owner and only within the
+scope of that authorization.
+
+Repository access or permission to contribute does not authorize independent
+commercial use, redistribution, sublicensing, publication, or disclosure.
+
+4. Prohibited actions
+
+Without prior written authorization, you may not:
+
+- redistribute substantial portions of the Software;
+- make the repository or source code public;
+- operate or sell a competing or derivative product;
+- remove proprietary or confidentiality notices;
+- disclose private prompts, schemas, data, credentials, or business logic;
+- sublicense, rent, lease, resell, or provide the Software as a service;
+- use the Software to train a competing system;
+- use the Software in violation of law or third-party rights.
+
+5. Third-party components
+
+Third-party libraries remain governed by their own licenses. This license does
+not replace valid third-party license terms.
+
+6. Confidentiality
+
+Non-public code, product strategy, prompts, schemas, user data, credentials,
+and implementation details must be treated as confidential unless the owner
+states otherwise in writing.
+
+7. No warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE,
+NON-INFRINGEMENT, AVAILABILITY, OR ERROR-FREE OPERATION.
+
+8. Limitation of liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE OWNER SHALL NOT BE LIABLE FOR
+INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES,
+OR FOR LOSS OF DATA, REVENUE, PROFITS, BUSINESS, OR GOODWILL.
+
+9. Termination
+
+Any permission terminates automatically upon breach. Unauthorized use must stop
+and unauthorized copies must be deleted or returned.
+
+10. Written permission
+
+Licensing, collaboration, commercial use, deployment rights, or redistribution
+must be approved in writing by the copyright owner.
+
+END OF LICENSE
