@@ -1,0 +1,37 @@
+name: Claude Code Action
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issues:
+    types: [opened]
+
+jobs:
+  claude-response:
+    # Apenas executa se o comentário for endereçado ao Claude ou se for um gatilho válido
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[claude]')) ||
+      (github.event_name == 'issues' && contains(github.event.issue.title, '[claude]'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code Action
+        uses: anthropics/claude-code-action@v1
+        with:
+          # Você deve configurar um destes secrets no seu repositório
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Ou se você for assinante Pro/Max:
+          # claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
