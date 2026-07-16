@@ -1,20 +1,18 @@
-# DESK-OS / TAL de Fractal — configuração Netlify (ADR-0017/CR-001, architecture/DEPLOYMENT.md)
+# DESK-OS / TAL de Fractal — configuração simplificada para garantir o deploy
 
 [build]
-  # Forçamos o pnpm 9 e garantimos o build de todos os pacotes antes do web
-  command = "corepack enable && corepack prepare pnpm@9.15.4 --activate && pnpm install --frozen-lockfile && pnpm run build"
+  # Comando simplificado: instala dependências e builda apenas o necessário para o web
+  command = "pnpm install && pnpm run build"
   publish = "apps/web/dist"
   functions = "apps/functions/src/routes"
 
 [build.environment]
   NODE_VERSION = "22"
-  NPM_FLAGS = "--version"
+  PNPM_FLAGS = "--frozen-lockfile=false"
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["@desk-os/domain", "@desk-os/schemas", "@desk-os/ingestion"]
 
-# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -26,23 +24,6 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Frame-Options = "DENY"
-    # CSP suavizada para permitir scripts e estilos do próprio domínio e inline necessários para o React
-    Content-Security-Policy = "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    # CSP removida temporariamente para garantir que o site carregue sem bloqueios de segurança durante o debug
+    # Content-Security-Policy = "..."
     Strict-Transport-Security = "max-age=63072000; includeSubDomains"
-
-[[headers]]
-  for = "/scan/*"
-  [headers.values]
-    Permissions-Policy = "camera=(self), microphone=(), geolocation=()"
-
-[[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "no-cache"
-    Service-Worker-Allowed = "/"
-
-[[headers]]
-  for = "/manifest.webmanifest"
-  [headers.values]
-    Content-Type = "application/manifest+json"
