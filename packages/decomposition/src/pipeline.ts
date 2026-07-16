@@ -44,6 +44,8 @@ export interface DecompositionInput {
   sourceArtifactIds?: string[];
   /** specs/DECOMPOSITION_ENGINE.md: "baixa confiança de classificação: pedir revisão em vez de adivinhar". */
   minClassificationConfidence?: number;
+  /** Permite passar um documento já extraído (ex: JSON legado) para pular a IA. */
+  preExtractedDocument?: any;
 }
 
 /**
@@ -58,6 +60,11 @@ export async function runDecompositionPipeline(input: DecompositionInput): Promi
   const now = new Date().toISOString();
   const sourceArtifactIds = input.sourceArtifactIds ?? [];
   const defaultSourceArtifactId = sourceArtifactIds[0] ?? null;
+
+  // BYPASS: Se for um JSON legado, convertemos diretamente
+  if (input.preExtractedDocument?.metadata?.is_legacy_json) {
+    return convertLegacyToPlan(input.preExtractedDocument, input.workspaceId, planVersionId as any, now, sourceArtifactIds as any);
+  }
 
   const classification = await classify(input.client, input.sourceText);
 
@@ -112,4 +119,78 @@ export async function runDecompositionPipeline(input: DecompositionInput): Promi
   };
 
   return validateOrThrow<PlanVersion>("planVersion", planVersion);
+}
+
+/** Converte o documento extraído do JSON legado para um PlanVersion válido. */
+function convertLegacyToPlan(doc: any, workspaceId: string, planVersionId: any, now: string, sourceArtifactIds: any[]): PlanVersion {
+  const nodes: any[] = [];
+  const rootNodeIds: any[] = [];
+  let currentProjectNode: any = null;
+  let currentDayNode: any = null;
+
+  for (const block of doc.blocks) {
+    const nodeId = createId();
+    if (block.metadata?.level === 1) {
+      // Projeto -> Nó Raiz
+      currentProjectNode = {
+        id: nodeId,
+        workspace_id: workspaceId,
+        parent_id: null,
+        node_type: "project",
+        title: block.text.replace("PROJETO: ", ""),
+        description: "",
+        lifecycle_state: "GENERATED",
+        created_at: now
+      };
+      nodes.push(currentProjectNode);
+      rootNodeIds.push(nodeId);
+    } else if (block.metadata?.level === 2) {
+      // Dia -> Nó Sprint/Agrupador
+      currentDayNode = {
+        id: nodeId,
+        workspace_id: workspaceId,
+        parent_id: currentProjectNode?.id || null,
+        node_type: "sprint",
+        title: block.text.replace("DIA: ", ""),
+        description: "",
+        lifecycle_state: "GENERATED",
+        created_at: now
+      };
+      nodes.push(currentDayNode);
+      if (!currentProjectNode) rootNodeIds.push(nodeId);
+    } else if (block.metadata?.is_action) {
+      // Ação -> Nó Bloco Operacional
+      nodes.push({
+        id: nodeId,
+        workspace_id: workspaceId,
+        parent_id: currentDayNode?.id || currentProjectNode?.id || null,
+        node_type: "block",
+        title: block.text,
+        description: "",
+        lifecycle_state: "GENERATED",
+        created_at: now,
+        operational_status: "TODO",
+        effort_score: 1,
+        impact_score: 1
+      });
+    }
+  }
+
+  return {
+    schema_version: "1.0.0",
+    id: planVersionId,
+    workspace_id: workspaceId as any,
+    version: 1,
+    lifecycle_state: "GENERATED",
+    input_kind: "portfolio",
+    objective: "Importação de JSON Legado",
+    dominant_result: "Plano estruturado via JSON",
+    root_node_ids: rootNodeIds,
+    nodes,
+    validation_report: { valid: true, errors: [], warnings: [], gaps: [] },
+    source_artifact_ids: sourceArtifactIds,
+    created_at: now,
+    approved_at: null,
+    approved_by: null,
+  };
 }

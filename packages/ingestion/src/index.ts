@@ -6,3 +6,4 @@ export * from "./consent.js";
 export * from "./language.js";
 export * from "./pipeline.js";
 export * from "./ingestion-job.js";
+export * from "./extractors/legacy-json.js";

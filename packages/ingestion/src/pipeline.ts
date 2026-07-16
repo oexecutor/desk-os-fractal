@@ -3,6 +3,7 @@ import { validateOrThrow } from "@desk-os/schemas";
 import type { DocumentBlock, ExtractedDocument } from "./extracted-document.js";
 import { extractDocx } from "./extractors/docx.js";
 import { extractJson } from "./extractors/json.js";
+import { isLegacyJson, convertLegacyJsonToExtractedDocument } from "./extractors/legacy-json.js";
 import { extractMarkdown } from "./extractors/markdown.js";
 import { extractPdf } from "./extractors/pdf.js";
 import { extractText } from "./extractors/text.js";
@@ -31,6 +32,27 @@ export async function extractDocument(
       break;
     }
     case "json": {
+      let content: any;
+      try {
+        content = JSON.parse(new TextDecoder().decode(buffer));
+      } catch {
+        ({ blocks, warnings } = extractText(buffer));
+        break;
+      }
+      if (isLegacyJson(content)) {
+        const legacyDoc = convertLegacyJsonToExtractedDocument(content);
+        return {
+          ...legacyDoc,
+          workspace_id: artifact.workspace_id,
+          source_artifact_id: artifact.id,
+          schema_version: "1.0.0",
+          language: "pt", // Assume português para o formato JOAO_OS
+          warnings: [],
+          created_at: new Date().toISOString(),
+          // @ts-ignore - metadata temporário para bypass de IA
+          metadata: { ...legacyDoc.metadata, is_legacy_json: true }
+        } as any;
+      }
       ({ blocks, warnings } = extractJson(buffer));
       break;
     }

@@ -45,7 +45,8 @@ describe("extractDocument — ADR-0009 pipeline por adapters", () => {
       maxUploadMb: 20,
     });
     const doc = await extractDocument(artifact, buffer);
-    expect(doc.blocks).toEqual([]);
+    // Agora o fallback para JSON inválido é tratar como texto bruto, produzindo blocos
+    expect(doc.blocks.length).toBeGreaterThan(0);
     expect(doc.warnings.some((w) => w.startsWith("LACUNA"))).toBe(true);
   });
 });

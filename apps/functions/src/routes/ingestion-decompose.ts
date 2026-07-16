@@ -41,6 +41,7 @@ export default async function handler(request: Request, context: Context): Promi
         workspaceId: body.workspace_id,
         sourceText,
         sourceArtifactIds: job.source_artifact_ids,
+        preExtractedDocument: documents[0], // Passa o primeiro doc para checar se é legado
         ...(body.user_context ? { userContext: body.user_context } : {}),
       });
 
